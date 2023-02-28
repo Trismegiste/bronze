@@ -10,6 +10,7 @@ namespace Trismegiste\Chalco;
 
 use Closure;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -18,7 +19,6 @@ use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -38,6 +38,7 @@ class App
         $this->routes = new RouteCollection();
         $this->resolver = new ClosureResolver($this->routes);
         $this->dispatcher = new EventDispatcher();
+        //$this->dispatcher->add
         $this->kernel = new HttpKernel($this->dispatcher, $this->resolver);
     }
 
