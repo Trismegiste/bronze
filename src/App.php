@@ -9,14 +9,16 @@
 namespace Trismegiste\Chalco;
 
 use Closure;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\HttpKernel;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -27,30 +29,23 @@ class App
 {
 
     protected RouteCollection $routes;
+    protected HttpKernelInterface $kernel;
+    protected ControllerResolverInterface $resolver;
+    protected EventDispatcherInterface $dispatcher;
 
     public function __construct()
     {
         $this->routes = new RouteCollection();
+        $this->resolver = new ClosureResolver($this->routes);
+        $this->dispatcher = new EventDispatcher();
+        $this->kernel = new HttpKernel($this->dispatcher, $this->resolver);
     }
 
     public function run(): void
     {
         // builds request
         $request = Request::createFromGlobals();
-
-        // matches the path with routes collection
-        $context = new RequestContext();
-        $matcher = new UrlMatcher($this->routes, $context);
-        try {
-            $parameters = $matcher->match($request->getPathInfo());
-            // injects route parameters into request attributes
-            $request->attributes->replace($parameters);
-            // calls the controller
-            $response = $parameters['_controller']($request);
-        } catch (ResourceNotFoundException $e) {
-            $response = new Response('404 Not Found', 404);
-        }
-
+        $response = $this->kernel->handle($request);
         // sends the response
         $response->send();
     }
