@@ -12,6 +12,7 @@ use Closure;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
@@ -40,12 +41,16 @@ class App
         // matches the path with routes collection
         $context = new RequestContext();
         $matcher = new UrlMatcher($this->routes, $context);
-        $parameters = $matcher->match($request->getPathInfo());
-        // injects route parameters into request attributes
-        $request->attributes->replace($parameters);
+        try {
+            $parameters = $matcher->match($request->getPathInfo());
+            // injects route parameters into request attributes
+            $request->attributes->replace($parameters);
+            // calls the controller
+            $response = $parameters['_controller']($request);
+        } catch (ResourceNotFoundException $e) {
+            $response = new Response('404 Not Found', 404);
+        }
 
-        // calls the controller
-        $response = $parameters['_controller']($request);
         // sends the response
         $response->send();
     }
@@ -54,7 +59,7 @@ class App
     {
         $route = new Route($url, ['_controller' => Closure::bind($control, $this, get_class())]);
         $route->setMethods($method);
-        $this->routes->add('app_' . $url . '_' . $method, $route);
+        $this->routes->add('route' . $this->routes->count(), $route);
     }
 
     public function __call($name, $arguments)
