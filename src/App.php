@@ -7,12 +7,14 @@
 namespace Trismegiste\Bronze;
 
 use Closure;
+use Error;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -37,7 +39,8 @@ class App
         $this->dispatcher = new EventDispatcher();
         $this->dispatcher->addListener(KernelEvents::EXCEPTION, function (ExceptionEvent $event) {
             $exception = $event->getThrowable();
-            $event->setResponse(new Response($exception->getMessage(), $exception->getStatusCode()));
+            $code = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : 500;
+            $event->setResponse(new Response('Exception ' . $exception->getMessage(), $code));
         });
         $this->kernel = new HttpKernel($this->dispatcher, $this->resolver);
     }
@@ -47,7 +50,11 @@ class App
         // builds request
         $request = Request::createFromGlobals();
         // handle the request
-        $response = $this->kernel->handle($request);
+        try {
+            $response = $this->kernel->handle($request);
+        } catch (Error $e) {
+            $response = new Response('Error ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
         // sends the response
         $response->send();
         // terminate

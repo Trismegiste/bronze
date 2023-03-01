@@ -46,4 +46,9 @@ class BusinessApp extends WebApp
         return $this->formFactory->create($fqcn);
     }
 
+    public function createEntity(string $typeFqcn, string $collectionName, string $template): Response
+    {
+        
+    }
+
 }
