@@ -10,9 +10,12 @@ use Closure;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -32,7 +35,10 @@ class App
         $this->routes = new RouteCollection();
         $this->resolver = new ClosureResolver($this->routes);
         $this->dispatcher = new EventDispatcher();
-        //$this->dispatcher->add
+        $this->dispatcher->addListener(KernelEvents::EXCEPTION, function (ExceptionEvent $event) {
+            $exception = $event->getThrowable();
+            $event->setResponse(new Response($exception->getMessage(), $exception->getStatusCode()));
+        });
         $this->kernel = new HttpKernel($this->dispatcher, $this->resolver);
     }
 
@@ -40,9 +46,12 @@ class App
     {
         // builds request
         $request = Request::createFromGlobals();
+        // handle the request
         $response = $this->kernel->handle($request);
         // sends the response
         $response->send();
+        // terminate
+        $this->kernel->terminate($request, $response);
     }
 
     protected function addRoute(string $url, callable $control, array $method): void

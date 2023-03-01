@@ -8,7 +8,13 @@ $app = new BusinessApp();
 
 $app->get('/blog/{slug}', function (string $slug) {
     $form = $this->createForm(\Trismegiste\Bronze\HumanType::class);
-    return $this->render('blog.html.twig', ['form' => $form->createView()]);
+
+    $form->handleRequest();
+    if ($form->isSubmitted() && $form->isValid()) {
+        var_dump($form->getData());
+    }
+
+    return $this->render('blog.html.twig', ['name' => $slug, 'form' => $form->createView()]);
 });
 
 $app->run();
