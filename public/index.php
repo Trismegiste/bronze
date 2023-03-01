@@ -2,11 +2,11 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Trismegiste\Chalco\App;
+use Trismegiste\Chalco\WebApp;
 
-$app = new App();
+$app = new WebApp();
 
-$app->get('/blog/{slug}/{toto}', function (string $slug, int $toto) {
+$app->get('/blog/{slug}', function (string $slug) {
     return $this->render('blog.html.twig', ['name' => $slug]);
 });
 

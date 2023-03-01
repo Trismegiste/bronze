@@ -12,15 +12,11 @@ use Closure;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 
 /**
  * Kernel
@@ -28,10 +24,10 @@ use Twig\Loader\FilesystemLoader;
 class App
 {
 
-    protected RouteCollection $routes;
-    protected HttpKernelInterface $kernel;
-    protected ControllerResolverInterface $resolver;
-    protected EventDispatcherInterface $dispatcher;
+    private RouteCollection $routes;
+    private HttpKernelInterface $kernel;
+    private ControllerResolverInterface $resolver;
+    private EventDispatcherInterface $dispatcher;
 
     public function __construct()
     {
@@ -51,7 +47,7 @@ class App
         $response->send();
     }
 
-    protected function addRoute(string $url, callable $control, string $method): void
+    protected function addRoute(string $url, callable $control, array $method): void
     {
         $route = new Route($url, ['_controller' => Closure::bind($control, $this, get_class())]);
         $route->setMethods($method);
@@ -61,19 +57,9 @@ class App
     public function __call($name, $arguments)
     {
         if (count($arguments) === 2 && in_array($name, ['get', 'put', 'post', 'patch', 'head', 'delete'])) {
-            $arguments[] = $name;
+            $arguments[] = [$name];
             call_user_func_array([$this, 'addRoute'], $arguments);
         }
-    }
-
-    public function render(string $tpl, array $param): Response
-    {
-        $loader = new FilesystemLoader(__DIR__ . '/../templates');
-        $twig = new Environment($loader);
-
-        return new StreamedResponse(function () use ($twig, $tpl, $param) {
-                    $twig->display($tpl, $param);
-                });
     }
 
 }
