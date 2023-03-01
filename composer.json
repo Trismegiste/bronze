@@ -9,7 +9,10 @@
     },
     "autoload": {
         "psr-4": {
-            "Trismegiste\\Chalco\\": "src/"
+            "Trismegiste\\Bronze\\": "src/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9"
     }
 }

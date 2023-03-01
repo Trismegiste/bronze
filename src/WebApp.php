@@ -1,12 +1,10 @@
 <?php
 
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Bronze - Make your Proof of Concept with Swag
  */
 
-namespace Trismegiste\Chalco;
+namespace Trismegiste\Bronze;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -14,9 +12,7 @@ use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
 /**
- * Description of WebApp
- *
- * @author flo
+ * An app built for browser
  */
 class WebApp extends App
 {
