@@ -6,7 +6,6 @@
 
 namespace Trismegiste\Bronze;
 
-use MongoDB\BSON\ObjectIdInterface;
 use MongoDB\Driver\Manager;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -15,8 +14,8 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Translation\Translator;
+use Trismegiste\Strangelove\MongoDb\Repository;
 use Trismegiste\Strangelove\MongoDb\RepositoryFactory;
-use Trismegiste\Strangelove\MongoDb\Root;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 /**
@@ -53,27 +52,15 @@ class BusinessApp extends WebApp
         return $this->formFactory->create($fqcn, $data, $options);
     }
 
-    protected function saveEntity(Form $form, string $dbName, string $collectionName): ObjectIdInterface
-    {
-        $fac = new RepositoryFactory($this->mongodb, $dbName);
-        $repo = $fac->create($collectionName);
-        $obj = $form->getData();
-        $repo->save($obj);
-
-        return $obj->getPk();
-    }
-
-    protected function loadEntity(string $dbName, string $collectionName, string $pk): Root
-    {
-        $fac = new RepositoryFactory($this->mongodb, $dbName);
-        $repo = $fac->create($collectionName);
-
-        return $repo->load($pk);
-    }
-
     public function form(string $url, callable $control): void
     {
         $this->addRoute($url, $control, ['get', 'post']);
+    }
+
+    protected function getRepository(string $dbName, string $collectionName): Repository
+    {
+        $fac = new RepositoryFactory($this->mongodb, $dbName);
+        return $fac->create($collectionName);
     }
 
 }

@@ -25,7 +25,7 @@ class WebApp extends App
         $this->twig = new Environment(new FilesystemLoader(__DIR__ . '/../templates'));
     }
 
-    protected function render(string $tpl, array $param): Response
+    protected function render(string $tpl, array $param = []): Response
     {
         return new StreamedResponse(function () use ($tpl, $param) {
                     $this->twig->display($tpl, $param);
