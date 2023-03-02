@@ -2,22 +2,42 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Trismegiste\Bronze\BusinessApp;
 use Trismegiste\Bronze\HumanType;
 
-$app = new BusinessApp();
+$dbName = $app = new BusinessApp();
 
-$app->get('/blog/{slug}', function (string $slug) {
+$app->form('/human/new/create', function () {
     $form = $this->createForm(HumanType::class);
 
     $form->handleRequest();
     if ($form->isSubmitted() && $form->isValid()) {
-        $form->getData();
-        return new RedirectResponse("/blog/$slug");
+        $pk = $this->saveEntity($form, 'bronze', 'human');
+
+        return $this->redirectTo("/human/$pk/edit");
     }
 
-    return $this->render('blog.html.twig', ['name' => $slug, 'form' => $form->createView()]);
+    return $this->render('create.html.twig', ['form' => $form->createView()]);
+});
+
+$app->form('/human/{pk}/edit', function (string $pk) {
+    $obj = $this->loadEntity('bronze', 'human', $pk);
+    $form = $this->createForm(HumanType::class, $obj);
+
+    $form->handleRequest();
+    if ($form->isSubmitted() && $form->isValid()) {
+        $pk = $this->saveEntity($form, 'bronze', 'human');
+
+        return $this->redirectTo("/human/$pk/show");
+    }
+
+    return $this->render('edit.html.twig', ['form' => $form->createView()]);
+});
+
+$app->get('/human/{pk}/show', function (string $pk) {
+    $obj = $this->loadEntity('bronze', 'human', $pk);
+
+    return $this->render('show.html.twig', ['entity' => $obj]);
 });
 
 $app->run();

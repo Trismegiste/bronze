@@ -10,6 +10,7 @@ use Closure;
 use Error;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
@@ -74,6 +75,11 @@ class App
             $arguments[] = [$name];
             call_user_func_array([$this, 'addRoute'], $arguments);
         }
+    }
+
+    protected function redirectTo(string $url): RedirectResponse
+    {
+        return new RedirectResponse($url);
     }
 
 }
