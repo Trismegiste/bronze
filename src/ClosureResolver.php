@@ -31,6 +31,7 @@ class ClosureResolver implements ControllerResolverInterface
     {
         // matches the path with routes collection
         $context = new RequestContext();
+        $context->fromRequest($request);
         $matcher = new UrlMatcher($this->routes, $context);
         try {
             $parameters = $matcher->matchRequest($request);

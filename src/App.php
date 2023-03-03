@@ -39,6 +39,11 @@ class App
         $this->kernel = new HttpKernel($this->dispatcher, $this->resolver);
     }
 
+    public function getKernel(): HttpKernelInterface
+    {
+        return $this->kernel;
+    }
+
     public function run(): void
     {
         // builds request
@@ -65,12 +70,29 @@ class App
         $this->routes->add('route' . $this->routes->count(), $route);
     }
 
-    public function __call($name, $arguments)
+    public function get(string $url, callable $control)
     {
-        if (count($arguments) === 2 && in_array($name, ['get', 'put', 'post', 'patch', 'head', 'delete'])) {
-            $arguments[] = [$name];
-            call_user_func_array([$this, 'addRoute'], $arguments);
-        }
+        $this->addRoute($url, $control, ['GET']);
+    }
+
+    public function post(string $url, callable $control)
+    {
+        $this->addRoute($url, $control, ['POST']);
+    }
+
+    public function put(string $url, callable $control)
+    {
+        $this->addRoute($url, $control, ['PUT']);
+    }
+
+    public function delete(string $url, callable $control)
+    {
+        $this->addRoute($url, $control, ['DELETE']);
+    }
+
+    public function patch(string $url, callable $control)
+    {
+        $this->addRoute($url, $control, ['PATCH']);
     }
 
     protected function redirectTo(string $url): RedirectResponse
