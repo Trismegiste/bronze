@@ -34,6 +34,7 @@ class BusinessApp extends WebApp
 
         $this->twig->getLoader()->addPath(__DIR__ . '/../vendor/symfony/twig-bridge/Resources/views/Form');
 
+        // copy-pasted from https://github.com/xmgcoyi/standalone-forms/blob/4.2+twig/src/setup.php
         $formEngine = new TwigRendererEngine(['form_div_layout.html.twig'], $this->twig);
         $this->twig->addRuntimeLoader(new FactoryRuntimeLoader([
                     FormRenderer::class => function () use ($formEngine) {

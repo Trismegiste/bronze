@@ -1,0 +1,11 @@
+{% extends "base.html.twig" %}
+{% block main %}
+    <h1>Exception</h1>
+    <h2>{{ exception.message }}</h2>
+    <h3>in {{ exception.file }} at {{ exception.line }}</h3>
+    <ul>
+        {% for item in exception.trace|reverse %}
+            <li>from "{{item.function }}()" in {{ item.file }} at {{ item.line }}</li>
+            {% endfor %}
+    </ul>
+{% endblock %}

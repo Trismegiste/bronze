@@ -12,10 +12,8 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -31,18 +29,13 @@ class App
     private RouteCollection $routes;
     private HttpKernelInterface $kernel;
     private ControllerResolverInterface $resolver;
-    private EventDispatcherInterface $dispatcher;
+    protected EventDispatcherInterface $dispatcher;
 
     public function __construct()
     {
         $this->routes = new RouteCollection();
         $this->resolver = new ClosureResolver($this->routes);
         $this->dispatcher = new EventDispatcher();
-        $this->dispatcher->addListener(KernelEvents::EXCEPTION, function (ExceptionEvent $event) {
-            $exception = $event->getThrowable();
-            $code = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : 500;
-            $event->setResponse(new Response('Exception ' . $exception->getMessage(), $code));
-        });
         $this->kernel = new HttpKernel($this->dispatcher, $this->resolver);
     }
 
@@ -50,12 +43,15 @@ class App
     {
         // builds request
         $request = Request::createFromGlobals();
-        // handle the request
+
         try {
+            // handle the request
             $response = $this->kernel->handle($request);
         } catch (Error $e) {
-            $response = new Response('Error ' . $e->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            $event = $this->dispatcher->dispatch(new ExceptionEvent($this->kernel, $request, HttpKernelInterface::MAIN_REQUEST, $e), KernelEvents::EXCEPTION);
+            $response = $event->getResponse();
         }
+
         // sends the response
         $response->send();
         // terminate
