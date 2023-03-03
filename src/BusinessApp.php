@@ -10,10 +10,16 @@ use MongoDB\Driver\Manager;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
+use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
+use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
+use Symfony\Component\Security\Csrf\TokenStorage\NativeSessionTokenStorage;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Validator\Validation;
 use Trismegiste\Strangelove\MongoDb\Repository;
 use Trismegiste\Strangelove\MongoDb\RepositoryFactory;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -35,16 +41,28 @@ class BusinessApp extends WebApp
         $this->twig->getLoader()->addPath(__DIR__ . '/../vendor/symfony/twig-bridge/Resources/views/Form');
 
         // copy-pasted from https://github.com/xmgcoyi/standalone-forms/blob/4.2+twig/src/setup.php
+        // CSRF
+        $csrfGenerator = new UriSafeTokenGenerator();
+        $csrfStorage = new NativeSessionTokenStorage();
+        $csrfManager = new CsrfTokenManager($csrfGenerator, $csrfStorage);
+        $csrfTokenManager = new CsrfTokenManager();
+
+        // Set up the Validator component
+        $validator = Validation::createValidator();
+
         $formEngine = new TwigRendererEngine(['form_div_layout.html.twig'], $this->twig);
         $this->twig->addRuntimeLoader(new FactoryRuntimeLoader([
-                    FormRenderer::class => function () use ($formEngine) {
-                        return new FormRenderer($formEngine);
+                    FormRenderer::class => function () use ($formEngine, $csrfManager) {
+                        return new FormRenderer($formEngine, $csrfManager);
                     },
         ]));
         $this->twig->addExtension(new TranslationExtension($translator));
         $this->twig->addExtension(new FormExtension());
 
-        $this->formFactory = Forms::createFormFactory();
+        $this->formFactory = Forms::createFormFactoryBuilder()
+                ->addExtension(new CsrfExtension($csrfTokenManager))
+                ->addExtension(new ValidatorExtension($validator))
+                ->getFormFactory();
         $this->mongodb = new Manager('mongodb://localhost:27017');
     }
 

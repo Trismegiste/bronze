@@ -48,6 +48,7 @@ class App
     {
         // builds request
         $request = Request::createFromGlobals();
+        Request::enableHttpMethodParameterOverride();
 
         try {
             // handle the request

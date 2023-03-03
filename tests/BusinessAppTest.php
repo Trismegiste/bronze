@@ -5,6 +5,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 use Trismegiste\Bronze\Browser;
 use Trismegiste\Bronze\BusinessApp;
 
@@ -21,10 +22,10 @@ class BusinessAppTest extends TestCase
         $this->client->setApp($this->sut);
     }
 
-    public function testHumanCreate()
+    public function testPatch()
     {
         $this->sut->patch('/yolo', function () {
-            return new Symfony\Component\HttpFoundation\Response('YOLO');
+            return new Response('YOLO');
         });
 
         $this->client->request('PATCH', '/yolo');
