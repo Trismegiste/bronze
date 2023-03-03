@@ -1,4 +1,8 @@
 {
+    "name": "trismegiste/bronze",
+    "description": "Code your Proof Of Concept with swag",
+    "type": "project",
+    "license": "MIT",
     "require": {
         "symfony/http-foundation": "^5.4",
         "symfony/routing": "^5.4",
