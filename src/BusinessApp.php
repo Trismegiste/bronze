@@ -11,7 +11,7 @@ use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -62,7 +62,7 @@ class BusinessApp extends WebApp
         $this->twig->addExtension(new FormExtension());
 
         $this->formFactory = Forms::createFormFactoryBuilder()
-    //            ->addExtension(new CsrfExtension($csrfTokenManager))
+                // ->addExtension(new CsrfExtension($csrfTokenManager))
                 ->addExtension(new ValidatorExtension($validator))
                 ->getFormFactory();
         $this->mongodb = new Manager('mongodb://localhost:27017');
@@ -81,6 +81,22 @@ class BusinessApp extends WebApp
     protected function createFormBuilder($data = null, array $options = []): FormBuilderInterface
     {
         return $this->formFactory->createBuilder(FormType::class, $data, $options);
+    }
+
+    protected function createMagicForm($data, array $options = []): FormBuilderInterface
+    {
+        $options['data_class'] = MagicEntity::class;
+
+        if ($data instanceof MagicEntity) {
+            $fac = $this->formFactory->createBuilder(FormType::class, $data, $options);
+        }
+
+        if (is_string($data)) {
+            $fac = $this->formFactory->createBuilder(FormType::class, null, $options)
+                    ->add('__entity', HiddenType::class, ['data' => $data]);
+        }
+
+        return $fac;
     }
 
     protected function getRepository(string $dbName, string $collectionName): Repository

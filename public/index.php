@@ -44,4 +44,22 @@ $app->get('/human/{pk}/show', function (string $pk) {
     return $this->render('show.html.twig', ['entity' => $obj]);
 });
 
+$app->form('/essai', function () {
+    /** @var BusinessApp $this */
+    $form = $this->createMagicForm('child')
+            ->add('firstname', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
+            ->add('save', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class)
+            ->getForm();
+
+    $form->handleRequest();
+    if ($form->isSubmitted() && $form->isValid()) {
+        $obj = $form->getData();
+        $this->getRepository('bronze', 'human')->save($obj);
+
+        return $this->redirectTo("/human/{$obj->getPk()}/edit");
+    }
+
+    return $this->render('create.html.twig', ['form' => $form->createView()]);
+});
+
 $app->run();

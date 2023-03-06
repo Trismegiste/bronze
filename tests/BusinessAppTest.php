@@ -29,9 +29,13 @@ class BusinessAppTest extends AppTestCase
             return $this->render('form.html.twig', ['form' => $form->createView()]);
         });
 
-        $this->client->request('GET', '/entity');
-        $this->assertStatusCodeEquals(200, $this->client->getResponse()->getContent());
+        $crawler = $this->client->request('GET', '/entity');
+        $this->assertStatusCodeEquals(200);
         $this->assertResponseContainsString('<form');
+
+        $form = $crawler->selectButton('form[save]')->form();
+        $this->client->submit($form, ['form[firstname]' => 'Motoko']);
+        $this->assertStatusCodeEquals(200);
     }
 
 }
