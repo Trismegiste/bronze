@@ -4,11 +4,12 @@
  * Bronze - Make your Proof of Concept with Swag
  */
 
-namespace Trismegiste\Bronze;
+namespace Tests\Trismegiste\Bronze;
 
 use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Trismegiste\Bronze\App;
 
 /**
  * Fake browser for Tests

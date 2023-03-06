@@ -5,8 +5,8 @@
  */
 
 use Symfony\Component\HttpFoundation\Response;
+use Tests\Trismegiste\Bronze\AppTestCase;
 use Trismegiste\Bronze\App;
-use Trismegiste\Bronze\AppTestCase;
 
 class AppTest extends AppTestCase
 {

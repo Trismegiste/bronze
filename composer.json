@@ -20,6 +20,11 @@
             "Trismegiste\\Bronze\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Trismegiste\\Bronze\\": "tests/"
+        }
+    },
     "require-dev": {
         "phpunit/phpunit": "^9",
         "symfony/browser-kit": "^5.4"
