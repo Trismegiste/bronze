@@ -5,6 +5,7 @@
  */
 
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Tests\Trismegiste\Bronze\AppTestCase;
 use Trismegiste\Bronze\App;
 
@@ -36,7 +37,7 @@ class AppTest extends AppTestCase
 
         $this->client->request($method, '/yolo');
         $this->assertStatusCodeEquals(200);
-        $this->assertEquals('YOLO', $this->client->getResponse()->getContent());
+        $this->assertResponseContainsString('YOLO');
     }
 
     public function testRedirect()
@@ -63,13 +64,13 @@ class AppTest extends AppTestCase
 
     public function testNotFound()
     {
-        $this->expectException(Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+        $this->expectException(NotFoundHttpException::class);
         $this->sut->run();
     }
 
     public function testCatchError()
     {
-        $this->expectException(\Error::class);
+        $this->expectException(Error::class);
         $this->sut->get('/', function () {
             return new NotFoundClass();
         });

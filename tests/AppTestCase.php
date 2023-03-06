@@ -32,4 +32,9 @@ abstract class AppTestCase extends TestCase
         $this->assertEquals($code, $this->client->getResponse()->getStatusCode());
     }
 
+    protected function assertResponseContainsString(string $str)
+    {
+        $this->assertStringContainsString($str, (string) $this->client->getResponse()->getContent());
+    }
+
 }

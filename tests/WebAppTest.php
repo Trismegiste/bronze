@@ -19,15 +19,15 @@ class WebAppTest extends Tests\Trismegiste\Bronze\AppTestCase
         });
         $this->client->request('GET', '/');
         $this->assertStatusCodeEquals(200);
-        $this->assertStringContainsString('<html', (string) $this->client->getResponse()->getContent());
+        $this->assertResponseContainsString('<html');
     }
 
     public function testNotFoundWithTwig()
     {
         $this->client->request('GET', '/');
         $this->assertStatusCodeEquals(404);
-        $this->assertStringContainsString('<html', (string) $this->client->getResponse()->getContent());
-        $this->assertStringContainsString('Exception', (string) $this->client->getResponse()->getContent());
+        $this->assertResponseContainsString('<html');
+        $this->assertResponseContainsString('Exception');
     }
 
     public function testCatchError()

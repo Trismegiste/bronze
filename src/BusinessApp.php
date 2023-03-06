@@ -10,9 +10,11 @@ use MongoDB\Driver\Manager;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
@@ -74,6 +76,11 @@ class BusinessApp extends WebApp
     public function form(string $url, callable $control): void
     {
         $this->addRoute($url, $control, ['get', 'post']);
+    }
+
+    protected function createFormBuilder($data = null, array $options = []): FormBuilderInterface
+    {
+        return $this->formFactory->createBuilder(FormType::class, $data, $options);
     }
 
     protected function getRepository(string $dbName, string $collectionName): Repository
