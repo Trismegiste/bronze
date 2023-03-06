@@ -4,30 +4,50 @@
  * Bronze - Make your Proof of Concept with Swag
  */
 
-class AppTest extends PHPUnit\Framework\TestCase
+use Symfony\Component\HttpFoundation\Response;
+use Trismegiste\Bronze\App;
+use Trismegiste\Bronze\AppTestCase;
+
+class AppTest extends AppTestCase
 {
 
-    protected $sut;
-
-    protected function setUp(): void
+    protected function createApp(): App
     {
-        $this->sut = new \Trismegiste\Bronze\App();
+        return new App();
     }
 
-    protected function getResponse(): string
+    public function getHttpMethod(): array
     {
-        ob_start();
-        $this->sut->run();
-        return ob_get_clean();
+        return [
+            ['get'],
+            ['post'],
+            ['put'],
+            ['patch'],
+            ['delete'],
+        ];
     }
 
-    public function testRoute()
+    /** @dataProvider getHttpMethod */
+    public function testPatch(string $method)
     {
-        $this->sut->get('/', function () {
-            return new Symfony\Component\HttpFoundation\Response('YOLO');
+        call_user_func([$this->sut, $method], '/yolo', function () {
+            return new Response('YOLO');
         });
 
-        $this->assertEquals('YOLO', $this->getResponse());
+        $this->client->request($method, '/yolo');
+        $this->assertStatusCodeEquals(200);
+        $this->assertEquals('YOLO', $this->client->getResponse()->getContent());
+    }
+
+    public function testRedirect()
+    {
+        $this->sut->get('/yolo', function () {
+            return $this->redirectTo('/elsewhere');
+        });
+        $this->client->followRedirects(false);
+        $this->client->request('GET', '/yolo');
+        $this->assertStatusCodeEquals(302);
+        $this->assertEquals('/elsewhere', $this->client->getResponse()->getHeader('location'));
     }
 
 }
