@@ -62,7 +62,7 @@ class BusinessApp extends WebApp
         $this->twig->addExtension(new FormExtension());
 
         $this->formFactory = Forms::createFormFactoryBuilder()
-                ->addExtension(new CsrfExtension($csrfTokenManager))
+    //            ->addExtension(new CsrfExtension($csrfTokenManager))
                 ->addExtension(new ValidatorExtension($validator))
                 ->getFormFactory();
         $this->mongodb = new Manager('mongodb://localhost:27017');

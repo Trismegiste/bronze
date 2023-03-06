@@ -27,14 +27,14 @@ abstract class AppTestCase extends TestCase
 
     abstract protected function createApp(): App;
 
-    protected function assertStatusCodeEquals(int $code)
+    protected function assertStatusCodeEquals(int $code, string $message = '')
     {
-        $this->assertEquals($code, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals($code, $this->client->getResponse()->getStatusCode(), $message);
     }
 
-    protected function assertResponseContainsString(string $str)
+    protected function assertResponseContainsString(string $str, string $message = '')
     {
-        $this->assertStringContainsString($str, (string) $this->client->getResponse()->getContent());
+        $this->assertStringContainsString($str, (string) $this->client->getResponse()->getContent(), $message);
     }
 
 }
