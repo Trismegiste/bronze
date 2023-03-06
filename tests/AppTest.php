@@ -28,7 +28,7 @@ class AppTest extends AppTestCase
     }
 
     /** @dataProvider getHttpMethod */
-    public function testPatch(string $method)
+    public function testRequest(string $method)
     {
         call_user_func([$this->sut, $method], '/yolo', function () {
             return new Response('YOLO');
@@ -48,6 +48,32 @@ class AppTest extends AppTestCase
         $this->client->request('GET', '/yolo');
         $this->assertStatusCodeEquals(302);
         $this->assertEquals('/elsewhere', $this->client->getResponse()->getHeader('location'));
+    }
+
+    public function testRunOk()
+    {
+        $this->sut->get('/', function () {
+            return new Response('RUN OK');
+        });
+        ob_start();
+        $this->sut->run();
+        $response = ob_get_clean();
+        $this->assertEquals('RUN OK', $response);
+    }
+
+    public function testNotFound()
+    {
+        $this->expectException(Symfony\Component\HttpKernel\Exception\NotFoundHttpException::class);
+        $this->sut->run();
+    }
+
+    public function testCatchError()
+    {
+        $this->expectException(\Error::class);
+        $this->sut->get('/', function () {
+            return new NotFoundClass();
+        });
+        $this->sut->run();
     }
 
 }

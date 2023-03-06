@@ -29,7 +29,15 @@ class Browser extends AbstractBrowser
         $req = Request::create($request->getUri(), $request->getMethod(), $request->getParameters(), $request->getCookies(), $request->getFiles(), $request->getServer(), $request->getContent());
         $resp = $this->kernel->handle($req);
 
-        return new Response($resp->getContent(), $resp->getStatusCode(), $resp->headers->all());
+        if ($resp instanceof \Symfony\Component\HttpFoundation\StreamedResponse) {
+            ob_start();
+            $resp->sendContent();
+            $content = ob_get_clean();
+        } else {
+            $content = $resp->getContent();
+        }
+
+        return new Response($content, $resp->getStatusCode(), $resp->headers->all());
     }
 
 }
