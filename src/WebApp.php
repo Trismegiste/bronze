@@ -25,8 +25,9 @@ class WebApp extends App
     public function __construct()
     {
         parent::__construct();
-        $this->twig = new Environment(new FilesystemLoader(__DIR__ . '/../templates'));
+        $this->twig = new Environment(new FilesystemLoader($this->getProjectDir() . '/templates'));
 
+        // managing exception
         $this->dispatcher->addListener(KernelEvents::EXCEPTION, function (ExceptionEvent $event) {
             $exception = $event->getThrowable();
             $response = $this->render('exception.html.twig', ['exception' => $exception]);

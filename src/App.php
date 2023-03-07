@@ -101,4 +101,9 @@ class App
         return new RedirectResponse($url);
     }
 
+    protected function getProjectDir(): string
+    {
+        return dirname($_SERVER['DOCUMENT_ROOT']);
+    }
+
 }

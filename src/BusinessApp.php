@@ -40,7 +40,7 @@ class BusinessApp extends WebApp
         parent::__construct();
         $translator = new Translator('en');
 
-        $this->twig->getLoader()->addPath(__DIR__ . '/../vendor/symfony/twig-bridge/Resources/views/Form');
+        $this->twig->getLoader()->addPath($this->getProjectDir() . '/vendor/symfony/twig-bridge/Resources/views/Form');
 
         // copy-pasted from https://github.com/xmgcoyi/standalone-forms/blob/4.2+twig/src/setup.php
         // CSRF

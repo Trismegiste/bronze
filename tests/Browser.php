@@ -22,6 +22,7 @@ class Browser extends AbstractBrowser
     public function setApp(App $app): void
     {
         $this->kernel = $app->getKernel();
+        $_SERVER['DOCUMENT_ROOT'] = __DIR__;
     }
 
     protected function doRequest(object $request): Response
