@@ -62,4 +62,11 @@ $app->form('/essai', function () {
     return $this->render('create.html.twig', ['form' => $form->createView()]);
 });
 
+$app->crud('bronze', 'bicycle', function (Symfony\Component\Form\FormBuilderInterface $builder) {
+    return $builder->add('brand', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
+            ->add('size', \Symfony\Component\Form\Extension\Core\Type\TextType::class)
+            ->add('save', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class)
+            ->getForm();
+});
+
 $app->run();

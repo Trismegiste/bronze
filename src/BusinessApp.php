@@ -12,6 +12,7 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Form;
@@ -107,6 +108,74 @@ class BusinessApp extends WebApp
     {
         $fac = new RepositoryFactory($this->mongodb, $dbName);
         return $fac->create($collectionName);
+    }
+
+    public function crud(string $dbName, string $entityName, callable $createForm): void
+    {
+        $repo = $this->getRepository($dbName, $entityName);
+
+        // SHOW
+        $this->get("/$entityName/{pk}/show", function (string $pk) use ($entityName, $repo) {
+            $obj = $repo->load($pk);
+
+            return $this->render("$entityName/show.html.twig", ['entity' => $obj]);
+        });
+
+        // CREATE
+        $this->form("/$entityName/new/create", function () use ($entityName, $repo, $createForm) {
+            $form = $createForm($this->createMagicForm($entityName));
+
+            $form->handleRequest();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $obj = $form->getData();
+                $repo->save($obj);
+
+                return $this->redirectTo("/$entityName/{$obj->getPk()}/edit");
+            }
+
+            return $this->render("$entityName/create.html.twig", ['form' => $form->createView()]);
+        });
+
+        // EDIT
+        $this->form("/$entityName/{pk}/edit", function (string $pk) use ($entityName, $repo, $createForm) {
+            $obj = $repo->load($pk);
+            $form = $createForm($this->createMagicForm($obj));
+
+            $form->handleRequest();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $obj = $form->getData();
+                $repo->save($obj);
+
+                return $this->redirectTo("/$entityName/{$obj->getPk()}/show");
+            }
+
+            return $this->render("$entityName/edit.html.twig", ['form' => $form->createView()]);
+        });
+
+        // DELETE
+        $this->form("/$entityName/{pk}/delete", function (string $pk) use ($entityName, $repo) {
+            $obj = $repo->load($pk);
+            $form = $this->createMagicForm($obj)
+                    ->add('delete', SubmitType::class)
+                    ->getForm();
+
+            $form->handleRequest();
+            if ($form->isSubmitted() && $form->isValid()) {
+                $obj = $form->getData();
+                $repo->delete($obj);
+
+                return $this->redirectTo("/$entityName");
+            }
+
+            return $this->render("$entityName/delete.html.twig", ['form' => $form->createView()]);
+        });
+
+        // LIST
+        $this->get("/$entityName", function () use ($entityName, $repo) {
+            $iter = $repo->search();
+
+            return $this->render("$entityName/list.html.twig", ['listing' => $iter]);
+        });
     }
 
 }

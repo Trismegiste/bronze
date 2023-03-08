@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+
+{% block main %}
+    <h1>Listing</h1>
+    <ul>
+        {% for item in listing %}
+            <li>
+                 {{ item.brand }} - {{ item.size }}
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
