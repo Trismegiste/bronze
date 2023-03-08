@@ -12,6 +12,7 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -35,9 +36,9 @@ class BusinessApp extends WebApp
     protected $formFactory;
     protected $mongodb;
 
-    public function __construct()
+    public function __construct(string $env = 'dev')
     {
-        parent::__construct();
+        parent::__construct($env);
         $translator = new Translator('en');
 
         $this->twig->getLoader()->addPath($this->getProjectDir() . '/vendor/symfony/twig-bridge/Resources/views/Form');
@@ -61,10 +62,13 @@ class BusinessApp extends WebApp
         $this->twig->addExtension(new TranslationExtension($translator));
         $this->twig->addExtension(new FormExtension());
 
-        $this->formFactory = Forms::createFormFactoryBuilder()
-                // ->addExtension(new CsrfExtension($csrfTokenManager))
-                ->addExtension(new ValidatorExtension($validator))
-                ->getFormFactory();
+        $ffb = Forms::createFormFactoryBuilder()
+                ->addExtension(new ValidatorExtension($validator));
+        if ($this->env !== 'test') {
+            $ffb->addExtension(new CsrfExtension($csrfTokenManager));
+        }
+        $this->formFactory = $ffb->getFormFactory();
+
         $this->mongodb = new Manager('mongodb://localhost:27017');
     }
 

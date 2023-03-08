@@ -26,13 +26,15 @@ use Symfony\Component\Routing\RouteCollection;
 class App
 {
 
+    protected string $env;
     private RouteCollection $routes;
     private HttpKernelInterface $kernel;
     private ControllerResolverInterface $resolver;
     protected EventDispatcherInterface $dispatcher;
 
-    public function __construct()
+    public function __construct(string $env = 'dev')
     {
+        $this->env = $env;
         $this->routes = new RouteCollection();
         $this->resolver = new ClosureResolver($this->routes);
         $this->dispatcher = new EventDispatcher();

@@ -22,9 +22,9 @@ class WebApp extends App
 
     protected Environment $twig;
 
-    public function __construct()
+    public function __construct(string $env = 'dev')
     {
-        parent::__construct();
+        parent::__construct($env);
         $this->twig = new Environment(new FilesystemLoader($this->getProjectDir() . '/templates'));
 
         // managing exception

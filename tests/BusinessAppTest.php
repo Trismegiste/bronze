@@ -15,7 +15,7 @@ class BusinessAppTest extends AppTestCase
 
     protected function createApp(): App
     {
-        return new BusinessApp();
+        return new BusinessApp('test');
     }
 
     public function testForm()
