@@ -6,8 +6,8 @@
 
 namespace Trismegiste\Bronze;
 
-use MongoDB\BSON\ObjectIdInterface;
 use Trismegiste\Strangelove\MongoDb\Root;
+use Trismegiste\Strangelove\MongoDb\RootImpl;
 
 /**
  * Generic Entity
@@ -15,7 +15,7 @@ use Trismegiste\Strangelove\MongoDb\Root;
 class MagicEntity implements Root
 {
 
-    use \Trismegiste\Strangelove\MongoDb\RootImpl {
+    use RootImpl {
         bsonSerialize as protected defaultSerialize;
         bsonUnserialize as protected defaultUnserialize;
     }
