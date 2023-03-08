@@ -26,7 +26,7 @@ class BusinessAppTest extends AppTestCase
                     ->add('save', SubmitType::class)
                     ->getForm();
 
-            return $this->render('form.html.twig', ['form' => $form->createView()]);
+            return $this->render('bicycle/form.html.twig', ['form' => $form->createView()]);
         });
 
         $crawler = $this->client->request('GET', '/entity');

@@ -2,11 +2,30 @@
 
 {% block main %}
     <h1>Listing</h1>
-    <ul>
-        {% for item in listing %}
-            <li>
-                 {{ item.brand }} - {{ item.size }}
-            </li>
-        {% endfor %}
-    </ul>
+    <a href="/bicycle/new/create">New</a>
+    <table role='grid'>
+        <thead>
+            <tr>
+                <th>Pk</th>
+                <th>Brand</th>
+                <th>Size</th>
+                <th>Color</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in listing %}
+                <tr>
+                     <td><a href="/bicycle/{{ item.pk }}/show">{{ item.pk }}</a></td>
+                     <td>{{ item.brand }}</td>
+                     <td>{{ item.size }}</td>
+                     <td>{{ item.color }}</td>
+                    <td>
+                        <a href="/bicycle/{{ item.pk }}/edit">Edit</a>
+                        <a href="/bicycle/{{ item.pk }}/delete">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
