@@ -41,11 +41,19 @@ class App
         $this->kernel = new HttpKernel($this->dispatcher, $this->resolver);
     }
 
+    /**
+     * Gets the HTTP Kernel
+     * @return HttpKernelInterface
+     */
     public function getKernel(): HttpKernelInterface
     {
         return $this->kernel;
     }
 
+    /**
+     * Runs the app
+     * @return void
+     */
     public function run(): void
     {
         // builds request
@@ -66,6 +74,13 @@ class App
         $this->kernel->terminate($request, $response);
     }
 
+    /**
+     * Appends a route
+     * @param string $url
+     * @param callable $control a closure for the controller
+     * @param array $method HTTP method
+     * @return void
+     */
     protected function addRoute(string $url, callable $control, array $method): void
     {
         $route = new Route($url, ['_controller' => Closure::bind($control, $this, get_class())]);
@@ -73,36 +88,70 @@ class App
         $this->routes->add('route' . $this->routes->count(), $route);
     }
 
+    /**
+     * Adds a GET route
+     * @param string $url
+     * @param callable $control
+     */
     public function get(string $url, callable $control)
     {
         $this->addRoute($url, $control, ['GET']);
     }
 
+    /**
+     * Adds a POST route
+     * @param string $url
+     * @param callable $control
+     */
     public function post(string $url, callable $control)
     {
         $this->addRoute($url, $control, ['POST']);
     }
 
+    /**
+     * Adds a PUT route
+     * @param string $url
+     * @param callable $control
+     */
     public function put(string $url, callable $control)
     {
         $this->addRoute($url, $control, ['PUT']);
     }
 
+    /**
+     * Adds a DELETE route
+     * @param string $url
+     * @param callable $control
+     */
     public function delete(string $url, callable $control)
     {
         $this->addRoute($url, $control, ['DELETE']);
     }
 
+    /**
+     * Adds a PATCH route
+     * @param string $url
+     * @param callable $control
+     */
     public function patch(string $url, callable $control)
     {
         $this->addRoute($url, $control, ['PATCH']);
     }
 
+    /**
+     * Sends a redirection
+     * @param string $url
+     * @return RedirectResponse
+     */
     protected function redirectTo(string $url): RedirectResponse
     {
         return new RedirectResponse($url);
     }
 
+    /**
+     * Gets the project directory
+     * @return string
+     */
     protected function getProjectDir(): string
     {
         return dirname($_SERVER['DOCUMENT_ROOT']);

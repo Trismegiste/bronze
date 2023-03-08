@@ -36,6 +36,12 @@ class WebApp extends App
         });
     }
 
+    /**
+     * Renders a Twig template
+     * @param string $tpl
+     * @param array $param
+     * @return Response
+     */
     protected function render(string $tpl, array $param = []): Response
     {
         return new StreamedResponse(function () use ($tpl, $param) {

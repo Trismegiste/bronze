@@ -73,21 +73,46 @@ class BusinessApp extends WebApp
         $this->mongodb = new Manager('mongodb://localhost:27017');
     }
 
+    /**
+     * Creates a Form with its FQCN Type
+     * @param string $fqcn
+     * @param type $data
+     * @param array $options Form options
+     * @return Form
+     */
     protected function createForm(string $fqcn, $data = null, array $options = []): Form
     {
         return $this->formFactory->create($fqcn, $data, $options);
     }
 
+    /**
+     * Registers 2 Routes GET & POST for creating an entity
+     * @param string $url
+     * @param callable $control A Closure for the controller
+     * @return void
+     */
     public function form(string $url, callable $control): void
     {
         $this->addRoute($url, $control, ['get', 'post']);
     }
 
+    /**
+     * Gets the form builder
+     * @param type $data Form data
+     * @param array $options Form options
+     * @return FormBuilderInterface
+     */
     protected function createFormBuilder($data = null, array $options = []): FormBuilderInterface
     {
         return $this->formFactory->createBuilder(FormType::class, $data, $options);
     }
 
+    /**
+     * Gets the form builder for a magic form
+     * @param string|\Trismegiste\Bronze\MagicEntity $data a string for the entity name or an instance of the entity
+     * @param array $options Form options
+     * @return FormBuilderInterface
+     */
     protected function createMagicForm($data, array $options = []): FormBuilderInterface
     {
         $options['data_class'] = MagicEntity::class;
@@ -104,12 +129,25 @@ class BusinessApp extends WebApp
         return $fac;
     }
 
+    /**
+     * Gets the MongoDb repository for a given database and a given collection
+     * @param string $dbName Database name
+     * @param string $collectionName Collection name
+     * @return Repository
+     */
     protected function getRepository(string $dbName, string $collectionName): Repository
     {
         $fac = new RepositoryFactory($this->mongodb, $dbName);
         return $fac->create($collectionName);
     }
 
+    /**
+     * Registers 5 Routes for CRUD operations : show, create, edit, delete and list
+     * @param string $dbName Database name
+     * @param string $entityName Entity name (and collection name)
+     * @param callable $createForm a closure that builds a magic form
+     * @return void
+     */
     public function crud(string $dbName, string $entityName, callable $createForm): void
     {
         $repo = $this->getRepository($dbName, $entityName);
