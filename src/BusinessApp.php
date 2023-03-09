@@ -62,6 +62,7 @@ class BusinessApp extends WebApp
         ]));
         $this->twig->addExtension(new TranslationExtension($translator));
         $this->twig->addExtension(new FormExtension());
+        $this->twig->addExtension(new PathExtension());
 
         $ffb = Forms::createFormFactoryBuilder()
                 ->addExtension(new ValidatorExtension($validator));

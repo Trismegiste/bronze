@@ -2,7 +2,7 @@
 
 {% block main %}
     <h1>Listing</h1>
-    <a href="/bicycle/new/create">New</a>
+    <a href="{{ crud_create('bicycle') }}">New</a>
     <table role='grid'>
         <thead>
             <tr>
@@ -16,13 +16,13 @@
         <tbody>
             {% for item in listing %}
                 <tr>
-                     <td><a href="/bicycle/{{ item.pk }}/show">{{ item.pk }}</a></td>
+                     <td><a href="{{ crud_show(item) }}">{{ item.pk }}</a></td>
                      <td>{{ item.brand }}</td>
                      <td>{{ item.size }}</td>
                      <td>{{ item.color }}</td>
                     <td>
-                        <a href="/bicycle/{{ item.pk }}/edit">Edit</a>
-                        <a href="/bicycle/{{ item.pk }}/delete">Delete</a>
+                        <a href="{{ crud_edit(item) }}">Edit</a>
+                        <a href="{{ crud_delete(item) }}">Delete</a>
                     </td>
                 </tr>
             {% endfor %}
