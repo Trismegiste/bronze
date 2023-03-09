@@ -55,4 +55,10 @@ class MagicEntityTest extends TestCase
         $this->assertInstanceOf(\MongoDB\BSON\ObjectIdInterface::class, $obj->getPk());
     }
 
+    public function testAttrbutes()
+    {
+        $this->sut->yolo = 123;
+        $this->assertContains('yolo', $this->sut->getAttributes());
+    }
+
 }

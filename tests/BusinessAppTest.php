@@ -6,6 +6,7 @@
 
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Tests\Trismegiste\Bronze\AppTestCase;
 use Trismegiste\Bronze\App;
 use Trismegiste\Bronze\BusinessApp;
@@ -35,6 +36,21 @@ class BusinessAppTest extends AppTestCase
 
         $form = $crawler->selectButton('form[save]')->form();
         $this->client->submit($form, ['form[firstname]' => 'Motoko']);
+        $this->assertStatusCodeEquals(200);
+    }
+
+    public function testCrud()
+    {
+        $this->sut->crud('bronze', 'bicycle', function (FormBuilderInterface $builder) {
+            return $builder
+                    ->add('name', TextType::class)
+                    ->add('save', SubmitType::class)
+                    ->getForm();
+        });
+
+        $this->client->request('GET', '/bicycle');
+        $this->assertStatusCodeEquals(200);
+        $this->client->request('GET', '/bicycle/new/create');
         $this->assertStatusCodeEquals(200);
     }
 

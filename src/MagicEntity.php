@@ -55,4 +55,9 @@ class MagicEntity implements Root
         $this->defaultUnserialize(['_id' => $pk, 'container' => $data]);
     }
 
+    public function getAttributes(): array
+    {
+        return array_keys($this->container);
+    }
+
 }

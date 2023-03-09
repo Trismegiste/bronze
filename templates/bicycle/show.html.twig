@@ -1,7 +1,8 @@
 {% extends "base.html.twig" %}
 {% block main %}
     <h1>Show</h1>
-    <p>Brand : {{ entity.brand }}</p>
-    <p>Size : {{ entity.size }}</p>
-    <p>Color : {{ entity.color }}</p>
+    <p>Primary key : {{ entity.pk }}</p>
+    {% for attr in entity.attributes %}
+        <p>{{ attr|humanize }} : {{ attribute(entity, attr) }}</p>
+    {% endfor %}
 {% endblock %}
