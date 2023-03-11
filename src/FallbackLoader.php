@@ -26,7 +26,7 @@ class FallbackLoader implements LoaderInterface
 
     protected function extractTemplateName(string $name): string
     {
-        if (preg_match('#^[A-Za-z0-9_-]+/(show|form|delete|create|edit).html.twig$#', $name, $matches)) {
+        if (preg_match('#^[A-Za-z0-9_-]+/(list|show|form|delete|create|edit).html.twig$#', $name, $matches)) {
             return $matches[1] . '.html.twig';
         }
 

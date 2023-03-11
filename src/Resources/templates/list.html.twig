@@ -1,0 +1,35 @@
+{% extends "base.html.twig" %}
+
+{% block main %}
+    <h1>Listing</h1>
+    <a href="{{ crud_create(entity_name) }}">New</a>
+    <table role='grid'>
+        {% for item in listing %}
+            {% if loop.first %}
+                <thead>
+                    <tr>
+                        <th>Pk</th>
+                            {% for attr in item.attributes %}
+                            <th>{{ attr|humanize }}</th>
+                            {% endfor %}
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% endif %}
+                <tr>
+                    <td><a href="{{ crud_show(item) }}">{{ item.pk }}</a></td>
+                        {% for attr in item.attributes %}
+                        <td>{{ attribute(item, attr) }}</td>
+                    {% endfor %}
+                    <td>
+                        <a href="{{ crud_edit(item) }}">Edit</a>
+                        <a href="{{ crud_delete(item) }}">Delete</a>
+                    </td>
+                </tr>
+                {% if loop.last %}
+                </tbody>
+            {% endif %}
+        {% endfor %}
+    </table>
+{% endblock %}
