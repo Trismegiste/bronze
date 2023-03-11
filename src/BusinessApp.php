@@ -42,7 +42,7 @@ class BusinessApp extends WebApp
         parent::__construct($env);
         $translator = new Translator('en');
 
-        $this->twig->getLoader()->addPath($this->getProjectDir() . '/vendor/symfony/twig-bridge/Resources/views/Form');
+        $this->twig->getLoader()->getLoaders()[0]->addPath($this->getProjectDir() . '/vendor/symfony/twig-bridge/Resources/views/Form');
 
         // copy-pasted from https://github.com/xmgcoyi/standalone-forms/blob/4.2+twig/src/setup.php
         // CSRF
@@ -172,7 +172,7 @@ class BusinessApp extends WebApp
                 return $this->redirectTo("/$entityName/{$obj->getPk()}/edit");
             }
 
-            return $this->render("$entityName/create.html.twig", ['form' => $form->createView()]);
+            return $this->render("$entityName/create.html.twig", ['entity_name' => $entityName, 'form' => $form->createView()]);
         });
 
         // EDIT
@@ -188,7 +188,7 @@ class BusinessApp extends WebApp
                 return $this->redirectTo("/$entityName/{$obj->getPk()}/show");
             }
 
-            return $this->render("$entityName/edit.html.twig", ['form' => $form->createView()]);
+            return $this->render("$entityName/edit.html.twig", ['entity_name' => $entityName, 'form' => $form->createView()]);
         });
 
         // DELETE
@@ -206,14 +206,14 @@ class BusinessApp extends WebApp
                 return $this->redirectTo("/$entityName");
             }
 
-            return $this->render("$entityName/delete.html.twig", ['form' => $form->createView()]);
+            return $this->render("$entityName/delete.html.twig", ['entity_name' => $entityName, 'form' => $form->createView()]);
         });
 
         // LIST
         $this->get("/$entityName", function () use ($entityName, $repo) {
             $iter = $repo->search();
 
-            return $this->render("$entityName/list.html.twig", ['listing' => $iter]);
+            return $this->render("$entityName/list.html.twig", ['entity_name' => $entityName, 'listing' => $iter]);
         });
     }
 
