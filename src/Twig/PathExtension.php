@@ -4,8 +4,9 @@
  * Bronze - Make your Proof of Concept with Swag
  */
 
-namespace Trismegiste\Bronze;
+namespace Trismegiste\Bronze\Twig;
 
+use Trismegiste\Bronze\MagicEntity;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

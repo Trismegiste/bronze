@@ -25,7 +25,7 @@ use Symfony\Component\Security\Csrf\TokenStorage\NativeSessionTokenStorage;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Validation;
 use Trismegiste\Bronze\MagicEntity;
-use Trismegiste\Bronze\PathExtension;
+use Trismegiste\Bronze\Twig\PathExtension;
 use Trismegiste\Strangelove\MongoDb\Repository;
 use Trismegiste\Strangelove\MongoDb\RepositoryFactory;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;

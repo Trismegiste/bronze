@@ -4,7 +4,7 @@
  * Bronze
  */
 
-namespace Trismegiste\Bronze;
+namespace Trismegiste\Bronze\Twig;
 
 use Twig\Loader\FilesystemLoader;
 use Twig\Loader\LoaderInterface;
@@ -21,7 +21,7 @@ class FallbackLoader implements LoaderInterface
 
     public function __construct()
     {
-        $this->wrapped = new FilesystemLoader(__DIR__ . '/Resources/templates');
+        $this->wrapped = new FilesystemLoader(__DIR__ . '/../Resources/templates');
     }
 
     protected function extractTemplateName(string $name): string
