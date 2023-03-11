@@ -89,7 +89,7 @@ class BusinessApp extends WebApp
     }
 
     /**
-     * Registers 2 Routes GET & POST for creating an entity
+     * Registers 2 Routes GET & POST for creating/updating/deleting an entity
      * @param string $url
      * @param callable $control A Closure for the controller
      * @return void
