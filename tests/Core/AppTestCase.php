@@ -4,10 +4,11 @@
  * Bronze - Make your Proof of Concept with Swag
  */
 
-namespace Tests\Trismegiste\Bronze;
+namespace Tests\Trismegiste\Bronze\Core;
 
 use PHPUnit\Framework\TestCase;
-use Trismegiste\Bronze\App;
+use Tests\Trismegiste\Bronze\Browser;
+use Trismegiste\Bronze\Core\App;
 
 /**
  * Template Method for testing an app

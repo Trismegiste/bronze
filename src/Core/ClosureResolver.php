@@ -4,7 +4,7 @@
  * Bronze - Make your Proof of Concept with Swag
  */
 
-namespace Trismegiste\Bronze;
+namespace Trismegiste\Bronze\Core;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;

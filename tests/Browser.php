@@ -9,7 +9,8 @@ namespace Tests\Trismegiste\Bronze;
 use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\BrowserKit\Response;
 use Symfony\Component\HttpFoundation\Request;
-use Trismegiste\Bronze\App;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Trismegiste\Bronze\Core\App;
 
 /**
  * Fake browser for Tests
@@ -30,7 +31,7 @@ class Browser extends AbstractBrowser
         $req = Request::create($request->getUri(), $request->getMethod(), $request->getParameters(), $request->getCookies(), $request->getFiles(), $request->getServer(), $request->getContent());
         $resp = $this->kernel->handle($req);
 
-        if ($resp instanceof \Symfony\Component\HttpFoundation\StreamedResponse) {
+        if ($resp instanceof StreamedResponse) {
             ob_start();
             $resp->sendContent();
             $content = ob_get_clean();

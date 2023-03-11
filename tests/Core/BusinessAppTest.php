@@ -7,9 +7,9 @@
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Tests\Trismegiste\Bronze\AppTestCase;
-use Trismegiste\Bronze\App;
-use Trismegiste\Bronze\BusinessApp;
+use Tests\Trismegiste\Bronze\Core\AppTestCase;
+use Trismegiste\Bronze\Core\App;
+use Trismegiste\Bronze\Core\BusinessApp;
 
 class BusinessAppTest extends AppTestCase
 {

@@ -4,7 +4,7 @@
  * Bronze - Make your Proof of Concept with Swag
  */
 
-namespace Trismegiste\Bronze;
+namespace Trismegiste\Bronze\Core;
 
 use MongoDB\Driver\Manager;
 use Symfony\Bridge\Twig\Extension\FormExtension;
@@ -24,6 +24,8 @@ use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Csrf\TokenStorage\NativeSessionTokenStorage;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Validation;
+use Trismegiste\Bronze\MagicEntity;
+use Trismegiste\Bronze\PathExtension;
 use Trismegiste\Strangelove\MongoDb\Repository;
 use Trismegiste\Strangelove\MongoDb\RepositoryFactory;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -110,7 +112,7 @@ class BusinessApp extends WebApp
 
     /**
      * Gets the form builder for a magic form
-     * @param string|\Trismegiste\Bronze\MagicEntity $data a string for the entity name or an instance of the entity
+     * @param string|MagicEntity $data a string for the entity name or an instance of the entity
      * @param array $options Form options
      * @return FormBuilderInterface
      */

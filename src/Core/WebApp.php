@@ -4,14 +4,16 @@
  * Bronze - Make your Proof of Concept with Swag
  */
 
-namespace Trismegiste\Bronze;
+namespace Trismegiste\Bronze\Core;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Trismegiste\Bronze\FallbackLoader;
 use Twig\Environment;
+use Twig\Loader\ChainLoader;
 use Twig\Loader\FilesystemLoader;
 
 /**
@@ -25,7 +27,7 @@ class WebApp extends App
     public function __construct(string $env = 'dev')
     {
         parent::__construct($env);
-        $this->twig = new Environment(new \Twig\Loader\ChainLoader([
+        $this->twig = new Environment(new ChainLoader([
                     new FilesystemLoader($this->getProjectDir() . '/templates'),
                     new FallbackLoader()
         ]));

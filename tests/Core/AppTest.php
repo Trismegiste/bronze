@@ -6,8 +6,8 @@
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Tests\Trismegiste\Bronze\AppTestCase;
-use Trismegiste\Bronze\App;
+use Tests\Trismegiste\Bronze\Core\AppTestCase;
+use Trismegiste\Bronze\Core\App;
 
 class AppTest extends AppTestCase
 {

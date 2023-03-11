@@ -4,12 +4,16 @@
  * Bronze - Make your Proof of Concept with Swag
  */
 
-class WebAppTest extends Tests\Trismegiste\Bronze\AppTestCase
+use Tests\Trismegiste\Bronze\Core\AppTestCase;
+use Trismegiste\Bronze\Core\App;
+use Trismegiste\Bronze\Core\WebApp;
+
+class WebAppTest extends AppTestCase
 {
 
-    protected function createApp(): \Trismegiste\Bronze\App
+    protected function createApp(): App
     {
-        return new \Trismegiste\Bronze\WebApp();
+        return new WebApp();
     }
 
     public function testTwigRender()
