@@ -4,7 +4,7 @@
  * Bronze - Make your Proof of Concept with Swag
  */
 
-namespace Trismegiste\Bronze;
+namespace Trismegiste\Bronze\Entity;
 
 use Trismegiste\Strangelove\MongoDb\Root;
 use Trismegiste\Strangelove\MongoDb\RootImpl;

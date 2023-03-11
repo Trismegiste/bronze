@@ -4,8 +4,10 @@
  * Bronze - Make your Proof of Concept with Swag
  */
 
+use MongoDB\BSON\ObjectId;
+use MongoDB\BSON\ObjectIdInterface;
 use PHPUnit\Framework\TestCase;
-use Trismegiste\Bronze\MagicEntity;
+use Trismegiste\Bronze\Entity\MagicEntity;
 
 class MagicEntityTest extends TestCase
 {
@@ -37,7 +39,7 @@ class MagicEntityTest extends TestCase
 
     public function testSerialize()
     {
-        $this->sut->_id = new MongoDB\BSON\ObjectId();
+        $this->sut->_id = new ObjectId();
         $this->sut->yolo = 123;
         $dump = json_decode(MongoDB\BSON\toJSON(MongoDB\BSON\fromPHP($this->sut)), true);
         $this->assertEquals(123, $dump['yolo']);
@@ -52,7 +54,7 @@ class MagicEntityTest extends TestCase
         $obj = \MongoDB\BSON\toPHP(\MongoDB\BSON\fromJSON(json_encode($dump)));
         $this->assertInstanceOf(MagicEntity::class, $obj);
         $this->assertEquals(123, $obj->yolo);
-        $this->assertInstanceOf(\MongoDB\BSON\ObjectIdInterface::class, $obj->getPk());
+        $this->assertInstanceOf(ObjectIdInterface::class, $obj->getPk());
     }
 
     public function testAttrbutes()

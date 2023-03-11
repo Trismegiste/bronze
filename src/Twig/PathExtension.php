@@ -6,7 +6,7 @@
 
 namespace Trismegiste\Bronze\Twig;
 
-use Trismegiste\Bronze\MagicEntity;
+use Trismegiste\Bronze\Entity\MagicEntity;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
