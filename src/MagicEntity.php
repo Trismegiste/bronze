@@ -37,7 +37,7 @@ class MagicEntity implements Root
         return key_exists($name, $this->container);
     }
 
-    public function bsonSerialize()
+    public function bsonSerialize(): object|array
     {
         $ret = $this->defaultSerialize();
         if (key_exists('_id', $ret)) {

@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+    symfony:
+        build: .
+        image: bronze:dev
+        ports:
+            - "8000:8000"
+        volumes:
+            - .:/www
+        depends_on:
+            - "mongo"
+        network_mode: host
+
+    mongo:
+        image: "bitnami/mongodb:4.4"
+        volumes:
+            - bronze-mongo:/bitnami/mongodb
+        network_mode: host
+
+volumes:
+    bronze-mongo:
