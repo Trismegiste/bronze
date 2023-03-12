@@ -1,0 +1,8 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$app = new \Symfony\Component\Console\Application();
+$app->add(new Trismegiste\Bronze\Command\GenerateEntity());
+$app->run();

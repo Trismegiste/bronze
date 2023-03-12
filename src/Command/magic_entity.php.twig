@@ -1,0 +1,37 @@
+{# Generate entity #}
+<?php
+
+/*
+ * Bronze
+ */
+
+namespace Trismegiste\Bronze\Entity;
+
+use Trismegiste\Strangelove\MongoDb\Root;
+use Trismegiste\Strangelove\MongoDb\RootImpl;
+
+/**
+ * Description of {{ entity_alias|capitalize }}
+ */
+class {{ entity_alias|capitalize }} implements Root
+{
+     use RootImpl;
+
+    {% for prop in properties %}
+        protected ${{ prop }};
+    {% endfor %}
+    
+    {% for prop in properties %}
+        public function get{{ prop|capitalize }}()
+        {
+            return $this->{{ prop }};
+        }
+    {% endfor %}
+    
+    {% for prop in properties %}
+        public function set{{ prop|capitalize }}($value): void
+        {
+            $this->{{ prop }} = $value;
+        }
+    {% endfor %}    
+}
