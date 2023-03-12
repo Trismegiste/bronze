@@ -58,31 +58,29 @@ class GenerateEntity extends Command
         $io->table(['idx', 'pk', 'entity', 'properties'], $rows);
         $idx = $io->ask('Which document do you want to transform into PHP entity', 0);
         $pk = $rows[$idx][1];
-        $io->confirm("You're about to generate a new class into Entity folder for document $pk", true);
 
         $found = $repository->load($pk);
-        file_put_contents(__DIR__ . '/../Entity/' . ucfirst($found->__entity) . '.php', $this->generate($found));
+        $properties = [];
+        foreach ($found->getAttributes() as $key) {
+            if ('__entity' === $key) {
+                continue;
+            }
+            $properties[$key] = $io->ask("Which type for $key property ?", $this->guessType($found->$key));
+        }
+
+        $target = ucfirst($found->__entity) . '.php';
+        if ($io->confirm("You're about to generate $target into Entity folder", true)) {
+            file_put_contents(__DIR__ . '/../Entity/' . $target, $this->generate($found->__entity, $properties));
+        }
 
         return self::SUCCESS;
     }
 
-    protected function generate(MagicEntity $entity): string
+    protected function generate(string $entityAlias, array $properties): string
     {
-        $attr = $entity->getAttributes();
-        $entity_alias = $entity->__entity;
-
-        // managing type
-        $properties = [];
-        foreach ($attr as $key) {
-            if ('__entity' === $key) {
-                continue;
-            }
-            $properties[$key] = $this->guessType($entity->$key);
-        }
-
         $twig = new Environment(new FilesystemLoader(__DIR__));
 
-        return $twig->render('magic_entity.php.twig', ['entity_alias' => $entity_alias, 'properties' => $properties]);
+        return $twig->render('magic_entity.php.twig', ['entity_alias' => $entityAlias, 'properties' => $properties]);
     }
 
     private function guessType($value): string
