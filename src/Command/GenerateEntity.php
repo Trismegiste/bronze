@@ -69,12 +69,37 @@ class GenerateEntity extends Command
     protected function generate(MagicEntity $entity): string
     {
         $attr = $entity->getAttributes();
-        unset($attr[array_search('__entity', $attr)]);
         $entity_alias = $entity->__entity;
+
+        // managing type
+        $properties = [];
+        foreach ($attr as $key) {
+            if ('__entity' === $key) {
+                continue;
+            }
+            $properties[$key] = $this->guessType($entity->$key);
+        }
 
         $twig = new Environment(new FilesystemLoader(__DIR__));
 
-        return $twig->render('magic_entity.php.twig', ['entity_alias' => $entity_alias, 'properties' => $attr]);
+        return $twig->render('magic_entity.php.twig', ['entity_alias' => $entity_alias, 'properties' => $properties]);
+    }
+
+    private function guessType($value): string
+    {
+        if (is_string($value)) {
+            return 'string';
+        }
+
+        if (is_float($value)) {
+            return 'float';
+        }
+
+        if (is_integer($value)) {
+            return 'int';
+        }
+
+        return '';
     }
 
 }

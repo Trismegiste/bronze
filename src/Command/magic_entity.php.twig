@@ -17,21 +17,21 @@ class {{ entity_alias|capitalize }} implements Root
 {
      use RootImpl;
 
-    {% for prop in properties %}
-        protected ${{ prop }};
+    {% for propName, phpType in properties %}
+        protected {{ phpType }} ${{ propName }};
     {% endfor %}
     
-    {% for prop in properties %}
-        public function get{{ prop|capitalize }}()
+    {% for propName, phpType in properties %}
+        public function get{{ propName|capitalize }}() {{ phpType is empty ? '' : ':'~phpType }}
         {
-            return $this->{{ prop }};
+            return $this->{{ propName }};
         }
     {% endfor %}
     
-    {% for prop in properties %}
-        public function set{{ prop|capitalize }}($value): void
+    {% for propName, phpType in properties %}
+        public function set{{ propName|capitalize }}({{ phpType }} $value): void
         {
-            $this->{{ prop }} = $value;
+            $this->{{ propName }} = $value;
         }
     {% endfor %}    
 }
