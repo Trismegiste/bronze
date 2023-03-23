@@ -116,7 +116,7 @@ class BusinessApp extends WebApp
      * @param array $options Form options
      * @return FormBuilderInterface
      */
-    protected function createMagicForm($data, array $options = []): FormBuilderInterface
+    protected function createMagicForm(string|MagicEntity $data, array $options = []): FormBuilderInterface
     {
         $options['data_class'] = MagicEntity::class;
 
