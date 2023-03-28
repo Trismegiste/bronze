@@ -27,7 +27,7 @@ class ClosureResolver implements ControllerResolverInterface
         $this->routes = $routes;
     }
 
-    public function getController(Request $request)
+    public function getController(Request $request): callable|false
     {
         // matches the path with routes collection
         $context = new RequestContext();

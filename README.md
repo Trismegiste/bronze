@@ -5,7 +5,7 @@ Survival kit for your proof of concepts & quick n dirty tests. Start a PHP proje
 It feels like Symfony but without ANY config, cache, model, entity, database config, form class... Inspired by Silex (hence the name : Bronze).
 No security at all, not intended for production **AT ALL**. It includes :
 * PHP 8.1
-* Symfony Kernel & HttpFoundation 5.4
+* Symfony Kernel & HttpFoundation 6.2
 * Symfony Forms with Validators & CSRF
 * Twig 3.x
 * MongoDb 4.4
