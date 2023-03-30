@@ -1,9 +1,13 @@
 # Bronze
 ## Code your Proof Of Concept with Swag
 
-Survival kit for your proof of concepts & quick n dirty tests. Start a PHP project in 10 seconds flat. 
-It feels like Symfony but without ANY config, cache, model, entity, database config, form class... Inspired by Silex (hence the name : Bronze).
-No security at all, not intended for production **AT ALL**. It includes :
+Survival kit for your proof of concepts & quick n dirty tests :
+* Start a PHP project in 10 seconds flat
+* Feel like Symfony but without model, entity, database config, form class... 
+* In the end, extract entity informations for the final project built on Symfony
+* No security at all, not intended for production **AT ALL**. 
+
+It includes :
 * PHP 8.1
 * Symfony Kernel & HttpFoundation 6.2
 * Symfony Forms with Validators & CSRF
