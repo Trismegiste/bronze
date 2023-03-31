@@ -12,7 +12,7 @@ It includes :
 * Symfony Kernel & HttpFoundation 6.2
 * Symfony Forms with Validators & CSRF
 * Twig 3.x
-* MongoDb 4.4
+* MongoDb 6.0
 * PicoCSS because it's the best CSS framework
 * AlpineJS because of climate change
 * PhpUnit 9.x
