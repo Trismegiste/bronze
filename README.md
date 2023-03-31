@@ -3,8 +3,9 @@
 
 Survival kit for your proof of concepts & quick n dirty tests :
 * Start a PHP project in 10 seconds flat
-* Feel like Symfony but without model, entity, database config, form class... 
-* In the end, extract entity informations for the final project built on Symfony
+* Feel like **Symfony 6** but without model, entity, database config, form class... 
+* Form-driven development
+* The POC is validated ? Now you can extract entity informations for the final project built on **Symfony 6**
 * No security at all, not intended for production **AT ALL**. 
 
 It includes :
@@ -38,7 +39,7 @@ $ docker exec -it bronze-symfony-1 vendor/bin/phpunit
 
 ## Run mongo shell
 ```bash
-$ docker exec -it bronze-mongo-1 mongo
+$ docker exec -it bronze-mongo-1 mongosh
 ```
 
 # Customize
