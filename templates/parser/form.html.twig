@@ -1,0 +1,9 @@
+{% extends "base.html.twig" %}
+
+{% block main %}
+    {{ form(form) }}
+    <hr/>
+    <div class="parsed-wikitext">
+        {{ parsed|raw }}
+    </div>
+{% endblock %}
