@@ -31,7 +31,7 @@ $app->form('/parse', function () {
             'wrapSections' => false,
         ];
 
-        $siteConfig = new MockSiteConfig($opts);
+        $siteConfig = new \Trismegiste\Bronze\Wikitext\InternalSiteConfig($opts);
         $dataAccess = new MockDataAccess($opts);
         $parsoid = new Parsoid($siteConfig, $dataAccess);
 
