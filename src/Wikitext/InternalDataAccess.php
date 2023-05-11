@@ -49,22 +49,51 @@ class InternalDataAccess extends DataAccess
 
     public function getPageInfo(PageConfig $pageConfig, string $titles): array
     {
-        
+        $ret = [];
+
+        // database
+        $iterator = $this->repositoy->search(['title' => ['$in' => $titles]], ['content']);
+        foreach ($iterator as $vertex) {
+            $ret[$vertex->getTitle()] = [
+                'pageId' => $vertex->getPk(),
+                'revId' => 1,
+                'missing' => false,
+                'known' => true,
+                'redirect' => false,
+                'linkclasses' => []
+            ];
+        }
+
+        // fill the missing
+        foreach ($titles as $title) {
+            if (!key_exists($title, $ret)) {
+                $ret[$title] = [
+                    'pageId' => null,
+                    'revId' => null,
+                    'missing' => true,
+                    'known' => false,
+                    'redirect' => false,
+                    'linkclasses' => [],
+                ];
+            }
+        }
+
+        return $ret;
     }
 
     public function logLinterData(PageConfig $pageConfig, array $lints): void
     {
-        
+        // nothing
     }
 
     public function parseWikitext(PageConfig $pageConfig, ContentMetadataCollector $metadata, string $wikitext): string
     {
-        
+        return '';
     }
 
     public function preprocessWikitext(PageConfig $pageConfig, ContentMetadataCollector $metadata, string $wikitext): string
     {
-        
+        return '';
     }
 
 }
