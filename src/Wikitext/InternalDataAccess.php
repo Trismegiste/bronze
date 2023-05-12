@@ -34,12 +34,17 @@ class InternalDataAccess extends DataAccess
 
     public function fetchTemplateData(PageConfig $pageConfig, string $title): ?array
     {
-        
+        return null;
+    }
+
+    private function normTitle(string $title): string
+    {
+        return strtr($title, ' ', '_');
     }
 
     public function fetchTemplateSource(PageConfig $pageConfig, string $title): ?PageContent
     {
-        
+        $normTitle = $this->normTitle($title);
     }
 
     public function getFileInfo(PageConfig $pageConfig, array $files): array
