@@ -52,7 +52,7 @@ class InternalDataAccess extends DataAccess
         
     }
 
-    public function getPageInfo(PageConfig $pageConfig, string $titles): array
+    public function getPageInfo(PageConfig $pageConfig, array $titles): array
     {
         $ret = [];
 
