@@ -11,12 +11,12 @@
     <script>
         const nodes = [
             {
-                data: {title: 'Home'},
+                data: {title: 'Home', completed: false},
                 nodes: [
-                    {data: {title: 'Page 1'}, nodes: []},
+                    {data: {title: 'Page 1'}, nodes: [], completed: false},
                     {
-                        data: {title: 'Page 2'},
-                        nodes: [{data: {title: 'Subpage'}, nodes: []}],
+                        data: {title: 'Page 2', completed: false},
+                        nodes: [{data: {title: 'Subpage', completed: true}, nodes: []}],
                     },
                 ],
             },
@@ -26,7 +26,8 @@
             nodes: nodes,
             element: document.querySelector('#tree'),
             renderLabel: (data) => {
-                return `<span>${data.title}</span>`;
+                const state = data.completed ? 'checked' : ''
+                return `<input type="checkbox" ${state}/><span>${data.title}</span>`;
             },
             onChange: ({ nodes, movedNode, srcParentNode, targetParentNode }) => {
                 console.log(movedNode.data);
@@ -104,10 +105,13 @@
             cursor: move !important;
         }
 
+        .tree__label > input[type=checkbox]:checked + span {
+            opacity: 33%;
+        }
 
         :root {
             --color: hsl(217, 11%, 90%);
-        /*    --background: hsl(217, 11%, 10%); */
+            /*    --background: hsl(217, 11%, 10%); */
             --accent-color: hsl(215, 100%, 58%);
             --accent-background: hsl(215, 71%, 12%);
             --hover-color: hsl(217, 11%, 86%);
