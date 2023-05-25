@@ -29,17 +29,30 @@
             element: document.querySelector('#tree'),
             renderLabel: (data) => {
                 const state = data.completed ? 'checked' : ''
-                return `<input type="checkbox" ${state}/><span>${data.title}</span><i class="icon-link"></i><a href="#"><i class="icon-feather"></i></a><i class="icon-cancel"></i>`;
+                return `<input type="checkbox" ${state}/><span>${data.title}</span>
+                        <i class="icon-link"></i>
+                        <a href="#"><i class="icon-feather"></i></a>
+                        <i class="icon-cancel"></i>`;
             },
             onChange: ({ nodes, movedNode, srcParentNode, targetParentNode }) => {
                 console.log('change', movedNode.data)
-                let rootNode = tree.getNode(nodes[0].id)
-                console.log(rootNode.data)
+                console.log(dumpTree(nodes[0]))
             },
             onClick: (event, node) => {
                 console.log('edit and delete', node.data);
             },
         });
+
+        function dumpTree(node) {
+            let data = tree.getNode(node.id).data
+            data.nodes = []
+            for (const child of node.subnodes) {
+                data.nodes.push(dumpTree(child))
+            }
+
+            return data
+        }
+
     </script>
 {% endblock %}
 
