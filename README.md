@@ -10,7 +10,7 @@ Survival kit for your proof of concepts & quick n dirty tests :
 
 It includes :
 * PHP 8.1
-* Symfony Kernel & HttpFoundation 6.2
+* Symfony Kernel & HttpFoundation 6.3
 * Symfony Forms with Validators & CSRF
 * Twig 3.x
 * MongoDb 6.0
