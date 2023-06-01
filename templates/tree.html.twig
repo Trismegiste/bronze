@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     <script>
         document.addEventListener('alpine:init', () => {
             Alpine.data('familyTree', () => ({
@@ -58,14 +59,14 @@
                     renderLevel(obj, i) {
                         let has_children = obj.children && obj.children.length
                         let html = `<span style="padding-left: 10px;"
-                     x-html="'${has_children ? '> ' : '- '}' + level.name"></span>`;
+                      x-html="'${has_children ? '> ' : '- '}' + level.name"></span>`;
 
                         if (obj.children) {
                             html += `<ul style="padding-left: 10px; padding-bottom: 10px;">
-                                        <template x-for="(level,i) in level.children">
-                                            <li x-html="renderLevel(level,i)"></li>
-                                        </template>
-                                      </ul>`;
+                                         <template x-for="(level,i) in level.children">
+                                             <li x-html="renderLevel(level,i)"></li>
+                                         </template>
+                                       </ul>`;
                         }
 
                         return html;
@@ -73,5 +74,4 @@
                 }))
         })
     </script>
-    {{ parent() }}
 {% endblock %}
