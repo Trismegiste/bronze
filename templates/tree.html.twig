@@ -2,11 +2,9 @@
 
 {% block main %}
     <div x-data="familyTree">
-        <ul>
-            <template x-for="(level, i) in families">
-                <li x-html="renderLevel(level, i)"></li>
-            </template>
-        </ul>
+        <template x-for="(level, i) in families">
+            <div class="pure-g" x-html="renderLevel(level, i)"></li>
+        </template>
     </div>
 {% endblock %}
 
@@ -58,15 +56,16 @@
 
                     renderLevel(obj, i) {
                         let has_children = obj.children && obj.children.length
-                        let html = `<span style="padding-left: 10px;"
-                      x-html="'${has_children ? '> ' : '- '}' + level.name"></span>`;
+                        let html = `<div class="pure-u-1-12"></div><div class="pure-u-11-12"
+                      x-text="level.name"></div>`;
 
                         if (obj.children) {
-                            html += `<ul style="padding-left: 10px; padding-bottom: 10px;">
-                                         <template x-for="(level,i) in level.children">
-                                             <li x-html="renderLevel(level,i)"></li>
-                                         </template>
-                                       </ul>`;
+                            html += `<div class="pure-u-1-12"></div>
+                                    <div class="pure-u-11-12">
+                                        <template x-for="(level,i) in level.children">
+                                            <div class="pure-g" x-html="renderLevel(level,i)"></div>
+                                        </template>
+                                    </div>`;
                         }
 
                         return html;
@@ -74,4 +73,8 @@
                 }))
         })
     </script>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
 {% endblock %}
