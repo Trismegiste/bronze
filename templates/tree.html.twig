@@ -5,6 +5,7 @@
         <template x-for="level in families">
             <div class="pure-g" x-html="renderLevel(level)"></li>
         </template>
+        <button x-on:click="update" ond>Update</button>
     </div>
 {% endblock %}
 
@@ -22,7 +23,7 @@
                                     children: [
                                         {
                                             name: 'Hollywood',
-                                        },  
+                                        },
                                         {
                                             name: 'Yolo',
                                         },
@@ -33,7 +34,11 @@
                                     children: [
                                         {
                                             name: 'Andy',
-                                            children: []
+                                            children: [
+                                                {
+                                                    name: 'Arffff'
+                                                }
+                                            ]
                                         },
                                     ]
                                 },
@@ -59,21 +64,39 @@
                     ],
 
                     renderLevel(obj) {
-                        let has_children = obj.children && obj.children.length
-                        let html = `<div class="pure-u-1-12"></div><div class="pure-u-11-12"
-                      x-text="level.name"></div>`;
+                        let html = `<div class="pure-u-1-12"></div>
+                                    <div class="pure-u-11-12 sortingzone" x-on:dragenter="enterSortingZone" x-on:dragleave="leaveSortingZone"></div>`
 
-                        if (obj.children) {
-                            html += `<div class="pure-u-1-12"></div>
-                                    <div class="pure-u-11-12">
-                                        <template x-for="level in level.children">
+                        html += `<div class="pure-u-1-12"></div>
+                                <div class="pure-u-11-12" draggable="true">
+                                    <span x-text="level.name"></span>`;
+
+                        if (obj.children && obj.children.length) {
+                            html += `<template x-for="level in level.children">
                                             <div class="pure-g" x-html="renderLevel(level)"></div>
-                                        </template>
-                                    </div>`;
+                                    </template>`
                         }
+
+                        html += '</div>'
 
                         return html;
                     },
+
+                    enterSortingZone(event) {
+                        if (event.target.classList.contains("sortingzone")) {
+                            event.target.classList.add("focusedzone")
+                        }
+                    },
+
+                    leaveSortingZone(event) {
+                        if (event.target.classList.contains("sortingzone")) {
+                            event.target.classList.remove("focusedzone")
+                        }
+                    },
+
+                    update() {
+                        this.families.push({name: 'toto', children: []})
+                    }
                 }))
         })
     </script>
@@ -83,6 +106,12 @@
     <style>
         div {
             background-color: hsl(0deg 50% 50% / 20%)
+        }
+        .sortingzone {
+            height: 0.5em;
+        }
+        .focusedzone {
+            background-color: green;
         }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
