@@ -65,11 +65,8 @@
 
                     renderLevel(obj) {
                         let html = `<div class="pure-u-1-12"></div>
-                                    <div class="pure-u-11-12 sortingzone" x-on:dragenter="enterSortingZone" x-on:dragleave="leaveSortingZone"></div>`
-
-                        html += `<div class="pure-u-1-12"></div>
                                 <div class="pure-u-11-12" draggable="true">
-                                    <span x-text="level.name"></span>`;
+                                    <span x-text="level.name"></span>`
 
                         if (obj.children && obj.children.length) {
                             html += `<template x-for="level in level.children">
@@ -79,7 +76,15 @@
 
                         html += '</div>'
 
-                        return html;
+                        html += `<div class="pure-u-1-12"></div>
+                                <div class="pure-u-11-12 sortingzone"
+                                    x-on:dragenter="enterSortingZone"
+                                    x-on:dragleave="leaveSortingZone"
+                                    x-on:dragover="dragOverNothing"
+                                    x-on:drop="dropSortingZone">
+                                </div>`
+
+                        return html
                     },
 
                     enterSortingZone(event) {
@@ -96,6 +101,16 @@
 
                     update() {
                         this.families.push({name: 'toto', children: []})
+                    },
+
+                    dragOverNothing(event) {
+                        // prevent default to allow drop
+                        event.preventDefault()
+                    },
+
+                    dropSortingZone(event) {
+                        event.preventDefault()
+                        console.log(event)
                     }
                 }))
         })
