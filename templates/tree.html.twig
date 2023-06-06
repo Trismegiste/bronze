@@ -2,8 +2,8 @@
 
 {% block main %}
     <div x-data="familyTree">
-        <template x-for="level in families">
-            <div class="pure-g" x-html="renderLevel(level)"></li>
+        <template x-for="node in families">
+            <div class="pure-g" x-html="renderLevel(node)"></li>
         </template>
         <button x-on:click="update" ond>Update</button>
     </div>
@@ -65,12 +65,12 @@
 
                     renderLevel(obj) {
                         let html = `<div class="pure-u-1-12"></div>
-                                <div class="pure-u-11-12" draggable="true">
-                                    <span x-text="level.name"></span>`
+                                    <div class="pure-u-11-12" draggable="true">
+                                        <span x-text="node.name"></span>`
 
                         if (obj.children && obj.children.length) {
-                            html += `<template x-for="level in level.children">
-                                            <div class="pure-g" x-html="renderLevel(level)"></div>
+                            html += `<template x-for="node in node.children">
+                                        <div class="pure-g" x-html="renderLevel(node)"></div>
                                     </template>`
                         }
 
@@ -81,7 +81,7 @@
                                     x-on:dragenter="enterSortingZone"
                                     x-on:dragleave="leaveSortingZone"
                                     x-on:dragover="dragOverNothing"
-                                    x-on:drop="dropSortingZone">
+                                    x-on:drop="dropSortingZone(node)">
                                 </div>`
 
                         return html
@@ -108,9 +108,9 @@
                         event.preventDefault()
                     },
 
-                    dropSortingZone(event) {
+                    dropSortingZone(node) {
                         event.preventDefault()
-                        console.log(event)
+                        console.log(this.$event, node)
                     }
                 }))
         })
