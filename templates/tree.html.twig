@@ -40,6 +40,14 @@
                                                 }
                                             ]
                                         },
+                                        {
+                                            name: 'Rita',
+                                            children: [
+                                                {
+                                                    name: 'Rebel'
+                                                }
+                                            ]
+                                        },
                                     ]
                                 },
                             ]
@@ -63,9 +71,11 @@
                         }
                     ],
 
+                    draggedNodeIdx: null,
+
                     renderLevel(obj, keyIdx) {
                         let html = `<div class="pure-u-1-12"></div>
-                                    <div class="pure-u-11-12" draggable="true">
+                                    <div class="pure-u-11-12" draggable="true" x-on:dragstart="dragStart" x-on:dragend="dragEnd">
                                         <span x-text="node.name"></span>`
 
                         if (obj.children && obj.children.length) {
@@ -102,6 +112,7 @@
 
                     update() {
                         this.families.push({name: 'toto', children: []})
+                        console.log(this.getNode(this.families, [1, 0]).name)
                     },
 
                     dragOverNothing(event) {
@@ -113,7 +124,8 @@
                         event.preventDefault()
                         let accumul = [event.target.dataset.index]
                         this.backtrackParent(event.target, accumul)
-                        console.log(accumul)
+                        console.log('source', this.getNode(this.families, this.draggedNodeIdx).name)
+                        console.log('target after', this.getNode(this.families, accumul).name)
                     },
 
                     backtrackParent(elem, indices) {
@@ -123,6 +135,26 @@
                             indices.unshift(parentDropZone.dataset.index)
                             this.backtrackParent(parentDropZone, indices)
                         }
+                    },
+
+                    dragStart(event) {
+                        let dropZone = event.target.nextElementSibling.nextElementSibling
+                        let accumul = [dropZone.dataset.index]
+                        this.backtrackParent(dropZone, accumul)
+                        this.draggedNodeIdx = accumul
+                    },
+
+                    dragEnd(event) {
+                        this.draggedNodeIdx = null
+                    },
+
+                    getNode(tree, pathIndices) {
+                        if (pathIndices.length === 1) {
+                            return tree[pathIndices[0]]
+                        }
+
+                        const key = pathIndices.shift()
+                        return this.getNode(tree[key].children, pathIndices)
                     }
                 }))
         })
