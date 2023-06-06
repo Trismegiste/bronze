@@ -112,7 +112,7 @@
 
                     update() {
                         this.families.push({name: 'toto', children: []})
-                        console.log(this.getNode(this.families, [1, 0]).name)
+                        console.log(this.getNode([1, 0]).name)
                     },
 
                     dragOverNothing(event) {
@@ -124,8 +124,15 @@
                         event.preventDefault()
                         let accumul = [event.target.dataset.index]
                         this.backtrackParent(event.target, accumul)
-                        console.log('source', this.getNode(this.families, this.draggedNodeIdx).name)
-                        console.log('target after', this.getNode(this.families, accumul).name)
+
+                        console.log('source', this.getNode(this.draggedNodeIdx).name)
+                        console.log('target after', this.getNode(accumul).name)
+
+                        const sourceIdx = this.draggedNodeIdx.pop()
+                        let nodeToMove = this.getNode(this.draggedNodeIdx).children.splice(sourceIdx, 1)
+                        console.log(nodeToMove[0])
+                        const targetIdx = accumul.pop()
+                        this.getNode(accumul).children.splice(targetIdx + 1, 0, nodeToMove[0])
                     },
 
                     backtrackParent(elem, indices) {
@@ -148,13 +155,19 @@
                         this.draggedNodeIdx = null
                     },
 
-                    getNode(tree, pathIndices) {
+                    getNode(pathIndices) {
+                        let accumul = [...pathIndices]
+
+                        return this.backtrackGetNode(this.families, accumul)
+                    },
+
+                    backtrackGetNode(tree, pathIndices) {
                         if (pathIndices.length === 1) {
                             return tree[pathIndices[0]]
                         }
 
                         const key = pathIndices.shift()
-                        return this.getNode(tree[key].children, pathIndices)
+                        return this.backtrackGetNode(tree[key].children, pathIndices)
                     }
                 }))
         })
