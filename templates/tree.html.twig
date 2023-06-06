@@ -2,8 +2,8 @@
 
 {% block main %}
     <div x-data="familyTree">
-        <template x-for="node in families">
-            <div class="pure-g" x-html="renderLevel(node)"></li>
+        <template x-for="(node, idx) in families">
+            <div class="pure-g" x-html="renderLevel(node, idx)"></li>
         </template>
         <button x-on:click="update" ond>Update</button>
     </div>
@@ -63,14 +63,14 @@
                         }
                     ],
 
-                    renderLevel(obj) {
+                    renderLevel(obj, keyIdx) {
                         let html = `<div class="pure-u-1-12"></div>
                                     <div class="pure-u-11-12" draggable="true">
                                         <span x-text="node.name"></span>`
 
                         if (obj.children && obj.children.length) {
-                            html += `<template x-for="node in node.children">
-                                        <div class="pure-g" x-html="renderLevel(node)"></div>
+                            html += `<template x-for="(node, idx) in node.children">
+                                        <div class="pure-g" x-html="renderLevel(node, idx)"></div>
                                     </template>`
                         }
 
@@ -78,10 +78,11 @@
 
                         html += `<div class="pure-u-1-12"></div>
                                 <div class="pure-u-11-12 sortingzone"
+                                    data-index="${keyIdx}"
                                     x-on:dragenter="enterSortingZone"
                                     x-on:dragleave="leaveSortingZone"
                                     x-on:dragover="dragOverNothing"
-                                    x-on:drop="dropSortingZone(node)">
+                                    x-on:drop="dropSortingZone">
                                 </div>`
 
                         return html
@@ -108,9 +109,20 @@
                         event.preventDefault()
                     },
 
-                    dropSortingZone(node) {
+                    dropSortingZone(event) {
                         event.preventDefault()
-                        console.log(this.$event, node)
+                        let accumul = [event.target.dataset.index]
+                        this.backtrackParent(event.target, accumul)
+                        console.log(accumul)
+                    },
+
+                    backtrackParent(elem, indices) {
+                        let parentDropZone = elem.parentElement.parentElement.nextElementSibling
+                        if (parentDropZone !== null) {
+                            parentDropZone = parentDropZone.nextElementSibling
+                            indices.unshift(parentDropZone.dataset.index)
+                            this.backtrackParent(parentDropZone, indices)
+                        }
                     }
                 }))
         })
