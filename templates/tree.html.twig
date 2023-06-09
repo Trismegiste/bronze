@@ -85,8 +85,7 @@
                     },
 
                     update() {
-                        this.families.push({name: 'toto', children: []})
-                        console.log(this.getNode([1, 0]).name)
+                        this.tree.push({pk: this.tree.length, name: 'toto', parent: null})
                     },
 
                     dragOverNothing(event) {
@@ -99,16 +98,13 @@
                         console.log(this.draggedNode.name)
                         let sibling = this.getNode(event.target.dataset.index)
                         console.log(sibling.parent)
-                        this.draggedNode.parent = sibling.parent
-                    },
 
-                    backtrackParent(elem, indices) {
-                        let parentDropZone = elem.parentElement.parentElement.nextElementSibling
-                        if (parentDropZone !== null) {
-                            parentDropZone = parentDropZone.nextElementSibling
-                            indices.unshift(parentDropZone.dataset.index)
-                            this.backtrackParent(parentDropZone, indices)
-                        }
+                        const movedIdx = this.tree.indexOf(this.draggedNode)
+                        this.tree.splice(movedIdx, 1)
+                        const siblingIdx = this.tree.indexOf(sibling)
+                        this.tree.splice(siblingIdx + 1, 0, this.draggedNode)
+
+                        this.draggedNode.parent = sibling.parent
                     },
 
                     dragStart(event) {
