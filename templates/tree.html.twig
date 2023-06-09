@@ -1,10 +1,9 @@
 {% extends "base.html.twig" %}
 
 {% block main %}
-    <div x-data="familyTree">
-        <template x-for="(node, idx) in families">
-            <div class="pure-g" x-html="renderLevel(node, idx)"></li>
-        </template>
+    <div x-data="treeUI">
+        <div class="pure-g" x-html="renderChildNodes(null)">
+        </div>
         <button x-on:click="update" ond>Update</button>
     </div>
 {% endblock %}
@@ -13,82 +12,57 @@
     {{ parent() }}
     <script>
         document.addEventListener('alpine:init', () => {
-            Alpine.data('familyTree', () => ({
-                    families: [
+            Alpine.data('treeUI', () => ({
+                    tree: [
                         {
+                            pk: 1,
                             name: 'Lupe',
-                            children: [
-                                {
-                                    name: 'Bertha',
-                                    children: [
-                                        {
-                                            name: 'Hollywood',
-                                        },
-                                        {
-                                            name: 'Yolo',
-                                        },
-                                    ],
-                                },
-                                {
-                                    name: 'Pinnick',
-                                    children: [
-                                        {
-                                            name: 'Andy',
-                                            children: [
-                                                {
-                                                    name: 'Arffff'
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            name: 'Rita',
-                                            children: [
-                                                {
-                                                    name: 'Rebel'
-                                                }
-                                            ]
-                                        },
-                                    ]
-                                },
-                            ]
+                            parent: null
                         },
                         {
-                            name: 'Smitty',
-                            children: [
-                                {
-                                    name: 'Vito',
-                                    children: []
-                                },
-                                {
-                                    name: 'Danny',
-                                    children: []
-                                },
-                                {
-                                    name: 'Penguin',
-                                    children: []
-                                },
-                            ],
-                        }
+                            pk: 2,
+                            name: 'Bertha',
+                            parent: 1
+                        },
+                        {
+                            pk: 3,
+                            name: 'Hollywood',
+                            parent: 1
+                        },
+                        {
+                            pk: 4,
+                            name: 'Yolo',
+                            parent: 2
+                        },
+                        {
+                            pk: 5,
+                            name: 'Arf',
+                            parent: 2
+                        },
                     ],
 
-                    draggedNodeIdx: null,
+                    draggedNode: null,
 
-                    renderLevel(obj, keyIdx) {
+                    renderChildNodes(fk) {
                         let html = `<div class="pure-u-1-12"></div>
                                     <div class="pure-u-11-12" draggable="true" x-on:dragstart="dragStart" x-on:dragend="dragEnd">
-                                        <span x-text="node.name"></span>`
+                                        <template x-for="node in tree">
+                                            <template x-if="node.pk === ${fk}">
+                                                <span x-text="node.name"></span>
+                                            </template>
+                                        </template>`
 
-                        if (obj.children && obj.children.length) {
-                            html += `<template x-for="(node, idx) in node.children">
-                                        <div class="pure-g" x-html="renderLevel(node, idx)"></div>
-                                    </template>`
-                        }
+                        html += `<template x-for="node in tree">
+                                    <template x-if="node.parent === ${fk}">
+                                        <div class="pure-g" x-html="renderChildNodes(node.pk)"></div>
+                                    </template>
+                                </template>`
 
                         html += '</div>'
 
                         html += `<div class="pure-u-1-12"></div>
                                 <div class="pure-u-11-12 sortingzone"
-                                    data-index="${keyIdx}"
+                                    data-index="${fk}"
                                     x-on:dragenter="enterSortingZone"
                                     x-on:dragleave="leaveSortingZone"
                                     x-on:dragover="dragOverNothing"
@@ -122,17 +96,10 @@
 
                     dropSortingZone(event) {
                         event.preventDefault()
-                        let accumul = [event.target.dataset.index]
-                        this.backtrackParent(event.target, accumul)
-
-                        console.log('source', this.getNode(this.draggedNodeIdx).name)
-                        console.log('target after', this.getNode(accumul).name)
-
-                        const sourceIdx = this.draggedNodeIdx.pop()
-                        let nodeToMove = this.getNode(this.draggedNodeIdx).children.splice(sourceIdx, 1)
-                        console.log(nodeToMove[0])
-                        const targetIdx = accumul.pop()
-                        this.getNode(accumul).children.splice(targetIdx + 1, 0, nodeToMove[0])
+                        console.log(this.draggedNode.name)
+                        let sibling = this.getNode(event.target.dataset.index)
+                        console.log(sibling.parent)
+                        this.draggedNode.parent = sibling.parent
                     },
 
                     backtrackParent(elem, indices) {
@@ -146,28 +113,20 @@
 
                     dragStart(event) {
                         let dropZone = event.target.nextElementSibling.nextElementSibling
-                        let accumul = [dropZone.dataset.index]
-                        this.backtrackParent(dropZone, accumul)
-                        this.draggedNodeIdx = accumul
+                        this.draggedNode = this.getNode(dropZone.dataset.index)
                     },
 
                     dragEnd(event) {
-                        this.draggedNodeIdx = null
+                        this.draggedNode = null
                     },
 
-                    getNode(pathIndices) {
-                        let accumul = [...pathIndices]
-
-                        return this.backtrackGetNode(this.families, accumul)
-                    },
-
-                    backtrackGetNode(tree, pathIndices) {
-                        if (pathIndices.length === 1) {
-                            return tree[pathIndices[0]]
+                    getNode(pk) {
+                        for (let node of this.tree) {
+                            if (node.pk == pk) {
+                                return node
+                            }
                         }
-
-                        const key = pathIndices.shift()
-                        return this.backtrackGetNode(tree[key].children, pathIndices)
+                        throw new Error(`Pk ${pk} does not exist`)
                     }
                 }))
         })
