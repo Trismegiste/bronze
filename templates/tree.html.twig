@@ -16,17 +16,17 @@
                     {data: {title: 'Page 1'}, nodes: []},
                     {
                         data: {title: 'Page 2'},
-                        nodes: [{data: {title: 'Subpage'}, nodes: []}],
-                    },
-                ],
-            },
+                        nodes: [{data: {title: 'Subpage'}, nodes: []}]
+                    }
+                ]
+            }
         ];
 
         const tree = new SortableTree({
             nodes: nodes,
             element: document.querySelector('#tree'),
             renderLabel: (data) => {
-                return `<span>${data.title}</span>`;
+                return `<input type="checkbox"/><span>${data.title}</span>`
             },
             onChange: ({ nodes, movedNode, srcParentNode, targetParentNode }) => {
                 console.log(dumpTree(nodes[0]))
@@ -122,5 +122,8 @@
             --muted-color: hsl(217, 11%, 46%);
         }
 
+        .tree__label > input[type=checkbox]:checked + span {
+            opacity: 0.3;
+        }
     </style>
 {% endblock %}
