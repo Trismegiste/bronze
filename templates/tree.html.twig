@@ -11,7 +11,7 @@
     <script>
         const nodes = [
             {
-                data: {title: 'Home'},
+                data: {title: 'Home', finished: false},
                 nodes: [
                     {data: {title: 'Page 1'}, nodes: []},
                     {
@@ -30,6 +30,10 @@
             },
             onChange: ({ nodes, movedNode, srcParentNode, targetParentNode }) => {
                 console.log(dumpTree(nodes[0]))
+            },
+            onClick: (event, node) => {
+                node.label.querySelector('span').innerHTML += ' yolo'
+                node.data.title += ' yolo'
             }
         })
 
