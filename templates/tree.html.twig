@@ -29,13 +29,19 @@
                 return `<span>${data.title}</span>`;
             },
             onChange: ({ nodes, movedNode, srcParentNode, targetParentNode }) => {
-                const data = movedNode.data;
-                const src = srcParentNode.data;
-                const target = targetParentNode.data;
-                console.log(data, src, target);
-                console.log(tree.getNode(nodes[0].id).data);
-            },
-        });
+                console.log(dumpTree(nodes[0]))
+            }
+        })
+
+        function dumpTree(elem) {
+            let dump = tree.getNode(elem.id).data
+            dump.nodes = []
+            for (let child of elem.subnodes) {
+                dump.nodes.push(dumpTree(child))
+            }
+
+            return dump
+        }
     </script>
 {% endblock %}
 
