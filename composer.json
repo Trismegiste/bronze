@@ -15,7 +15,8 @@
         "trismegiste/strangelove-bundle": "^2",
         "symfony/security-csrf": "^6.3",
         "symfony/validator": "^6.3",
-        "symfony/console": "^6.3"
+        "symfony/console": "^6.3",
+        "symfony/http-client": "^6.3"
     },
     "autoload": {
         "psr-4": {

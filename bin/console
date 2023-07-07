@@ -5,4 +5,5 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 $app = new \Symfony\Component\Console\Application();
 $app->add(new Trismegiste\Bronze\Command\GenerateEntity());
+$app->add(new Trismegiste\Bronze\Command\Scrape());
 $app->run();
