@@ -46,7 +46,7 @@ class Scrape extends Command
         ksort($prodPerHour);
         $ts = array_key_last($prodPerHour);
 
-        $output->writeln($prodPerHour[$ts]->co2intensityProduction);
+        $output->writeln($prodPerHour[$ts]->co2intensityProduction . ' gCO₂eq/kWh');
 
         return self::SUCCESS;
     }
