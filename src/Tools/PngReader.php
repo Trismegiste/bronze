@@ -6,7 +6,7 @@ class PngReader
 {
 
     private array $pngChunks = [];
-    private $filePtr;
+    private \SplFileObject $filePtr;
 
     public function __construct(\SplFileInfo $png)
     {
@@ -15,21 +15,21 @@ class PngReader
         }
 
         // Open the file
-        $this->filePtr = fopen($png->getPathname(), 'r');
-
-        if (!$this->filePtr) {
-            throw new \RuntimeException('Unable to open file ' . $png->getBasename());
+        try {
+            $this->filePtr = $png->openFile('r');
+        } catch (\RuntimeException $e) {
+            throw new \RuntimeException('Unable to open file ' . $png->getBasename(), $e->getCode(), $e);
         }
 
         // Read the magic bytes and verify
-        $header = fread($this->filePtr, 8);
+        $header = $this->filePtr->fread(8);
 
         if ($header != "\x89PNG\x0d\x0a\x1a\x0a") {
             throw new \RuntimeException($png->getBasename() . ' is not a valid PNG image');
         }
 
         // Loop through the chunks. Byte 0-3 is length, Byte 4-7 is type
-        $chunkHeader = fread($this->filePtr, 8);
+        $chunkHeader = $this->filePtr->fread(8);
 
         while ($chunkHeader) {
             // Extract length and type from binary data
@@ -40,21 +40,21 @@ class PngReader
                 $this->pngChunks[$chunk['type']] = [];
             }
             $this->pngChunks[$chunk['type']][] = [
-                'offset' => ftell($this->filePtr),
+                'offset' => $this->filePtr->ftell(),
                 'size' => $chunk['size']
             ];
 
             // Skip to next chunk (over body and CRC)
-            fseek($this->filePtr, $chunk['size'] + 4, SEEK_CUR);
+            $this->filePtr->fseek($chunk['size'] + 4, SEEK_CUR);
 
             // Read next chunk header
-            $chunkHeader = fread($this->filePtr, 8);
+            $chunkHeader = $this->filePtr->fread(8);
         }
     }
 
     function __destruct()
     {
-        fclose($this->filePtr);
+        unset($this->filePtr);
     }
 
     public function hasChunk(string $key): bool
@@ -83,8 +83,8 @@ class PngReader
 
         foreach ($this->pngChunks[$type] as $chunk) {
             if ($chunk['size'] > 0) {
-                fseek($this->filePtr, $chunk['offset'], SEEK_SET);
-                $chunks[] = fread($this->filePtr, $chunk['size']);
+                $this->filePtr->fseek($chunk['offset'], SEEK_SET);
+                $chunks[] = $this->filePtr->fread($chunk['size']);
             } else {
                 $chunks[] = '';
             }
