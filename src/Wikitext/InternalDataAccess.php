@@ -49,7 +49,7 @@ class InternalDataAccess extends DataAccess
 
     public function getFileInfo(PageConfig $pageConfig, array $files): array
     {
-        
+        return array_fill_keys(array_keys($files), null);
     }
 
     public function getPageInfo(PageConfig $pageConfig, array $titles): array

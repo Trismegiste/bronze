@@ -262,4 +262,9 @@ class InternalSiteConfig extends SiteConfig
         return 220;
     }
 
+    public function relativeLinkPrefix(): string
+    {
+        return '/show/';
+    }
+
 }
